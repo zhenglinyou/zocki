@@ -1,17 +1,16 @@
 package com.zocki;
 
-import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.zocki.baselibrary.dialog.AlertDialog;
-import com.zocki.baselibrary.http.EngineCallBack;
 import com.zocki.baselibrary.http.HttpUtils;
 import com.zocki.baselibrary.ioc.OnClick;
 import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.entity.RecoverEntity;
 import com.zocki.framelibrary.BaseSkinActivity;
+import com.zocki.framelibrary.db.IDBDaoSupport;
+import com.zocki.framelibrary.db.factory.DBDaoSupportFactory;
 import com.zocki.framelibrary.http.HttpCallBack;
 
 public class MainActivity extends BaseSkinActivity {
@@ -31,9 +30,13 @@ public class MainActivity extends BaseSkinActivity {
 
     @Override
     protected void initData() {
+
+        IDBDaoSupport<TTT> daoSupport = DBDaoSupportFactory.getInstance().getDao(TTT.class);
+        daoSupport.insert( new TTT() );
+
     }
 
-    @OnClick({R.id.button,R.id.button2} )
+    @OnClick({R.id.button,R.id.button2})
     private void aliHotFix(View view) {
 
         if( view.getId() == R.id.button2 ) {
@@ -69,7 +72,7 @@ public class MainActivity extends BaseSkinActivity {
             return;
         }
 
-        try {
+       /* try {
             // 测试 目前暂且放在本地
             String patchFileString =  Environment.getExternalStorageDirectory()+"/fix.apatch";
             Log.e("TAG", patchFileString);
@@ -79,6 +82,6 @@ public class MainActivity extends BaseSkinActivity {
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Bug修复失败", Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
 }
