@@ -1,4 +1,8 @@
-package com.zocki.framelibrary.db;
+package com.zocki.db.library;
+
+import android.text.TextUtils;
+
+import java.util.Locale;
 
 /**
  * Created by Administrator on 2017/7/30 0030.
@@ -29,4 +33,10 @@ public class DaoUtil {
         return null;
     }
 
+    public static String capitalize(String string) {
+        if( !TextUtils.isEmpty(string) ) {
+            return string.substring(0,1).toUpperCase(Locale.US) + string.substring(1);
+        }
+        return null;
+    }
 }

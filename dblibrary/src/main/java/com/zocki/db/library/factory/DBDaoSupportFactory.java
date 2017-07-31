@@ -1,10 +1,10 @@
-package com.zocki.framelibrary.db.factory;
+package com.zocki.db.library.factory;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
-import com.zocki.framelibrary.db.IDBDaoSupport;
-import com.zocki.framelibrary.db.impl.DBDaoSupportImpl;
+import com.zocki.db.library.IDBDaoSupport;
+import com.zocki.db.library.impl.DBDaoSupportImpl;
 
 import java.io.File;
 
@@ -33,20 +33,18 @@ public class DBDaoSupportFactory {
     }
 
     public static DBDaoSupportFactory getInstance() {
-        if( instance == null ) {
+        if(instance == null) {
             synchronized (DBDaoSupportFactory.class) {
-                if( instance == null ) instance = new DBDaoSupportFactory();
+                if(instance == null) instance = new DBDaoSupportFactory();
             }
         }
         return instance;
     }
 
-
-    public <T> IDBDaoSupport<T> getDao( Class<T> clazz ) {
+    public <T> IDBDaoSupport<T> getDao(Class<T> clazz) {
         IDBDaoSupport<T> daoSupport = new DBDaoSupportImpl<T>();
         daoSupport.init(mSqLiteDatabase,clazz);
         return daoSupport;
     }
-
 
 }
