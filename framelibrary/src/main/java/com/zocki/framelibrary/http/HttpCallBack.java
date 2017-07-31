@@ -18,6 +18,8 @@ public abstract class HttpCallBack<T> implements EngineCallBack {
     @Override
     public void onPreExcute(Context context,Map<String, Object> params) {
         // 添加默认参数
+
+        // dialog显示
         onPreExcute();
     }
 
