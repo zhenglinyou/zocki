@@ -30,10 +30,6 @@ public class MainActivity extends BaseSkinActivity {
 
     @Override
     protected void initData() {
-
-        IDBDaoSupport<TTT> daoSupport = DBDaoSupportFactory.getInstance().getDao(TTT.class);
-        daoSupport.insert( new TTT() );
-
     }
 
     @OnClick({R.id.button,R.id.button2})
