@@ -1,10 +1,10 @@
-package com.zocki.framelibrary.db.factory;
+package com.zocki.db.library.factory;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
-import com.zocki.framelibrary.db.IDBDaoSupport;
-import com.zocki.framelibrary.db.impl.DBDaoSupportImpl;
+import com.zocki.db.library.IDBDaoSupport;
+import com.zocki.db.library.impl.DBDaoSupportImpl;
 
 import java.io.File;
 

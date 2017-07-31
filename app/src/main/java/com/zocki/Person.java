@@ -5,8 +5,29 @@ package com.zocki;
  */
 
 public class Person {
+
     private String name;
     private int age;
+
+    private boolean flag;
+
+    private boolean uflag = true;
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    public boolean isUflag() {
+        return uflag;
+    }
+
+    public void setUflag(boolean uflag) {
+        this.uflag = uflag;
+    }
 
     public Person() {
     }
@@ -37,6 +58,8 @@ public class Person {
         return "Person{" +
                 "name='" + name + '\'' +
                 ", age=" + age +
+                ", flag=" + flag +
+                ", uflag=" + uflag +
                 '}';
     }
 }

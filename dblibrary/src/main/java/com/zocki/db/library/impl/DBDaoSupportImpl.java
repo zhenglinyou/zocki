@@ -1,4 +1,4 @@
-package com.zocki.framelibrary.db.impl;
+package com.zocki.db.library.impl;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.zocki.baselibrary.AppConfig;
 import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.framelibrary.db.DaoUtil;
-import com.zocki.framelibrary.db.IDBDaoSupport;
+import com.zocki.db.library.DaoUtil;
+import com.zocki.db.library.IDBDaoSupport;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -42,9 +42,9 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
                 .append("flag boolean")
                 .append(";");*/
         
-        sql.append("create table if not exists ")
+        sql.append("CREATE TABLE IF NOT EXISTS ")
                 .append(DaoUtil.getTableName(clazz))
-                .append("(id integer primary key autoincrement, ");
+                .append("(ID INTEGER PRIMARY KEY AUTOINCREMENT, ");
 
         // 反射 获取变量名称
         for (Field field : mClazz.getDeclaredFields()) {
@@ -76,16 +76,20 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
     @Override
     public void insert(List<T> datas) {
         if( datas == null ) return ;
+        try {
+            // 批量插入，采用事务方式
+            mSqLiteDatabase.beginTransaction();
 
-        // 批量插入，采用事务方式
-        mSqLiteDatabase.beginTransaction();
+            for (T data : datas) {
+                insert(data);
+            }
 
-        for (T data : datas) {
-            insert(data);
+            mSqLiteDatabase.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            mSqLiteDatabase.endTransaction();
         }
-
-        mSqLiteDatabase.setTransactionSuccessful();
-        mSqLiteDatabase.endTransaction();
     }
 
     /**

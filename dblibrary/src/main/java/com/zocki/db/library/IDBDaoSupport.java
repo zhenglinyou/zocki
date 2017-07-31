@@ -1,4 +1,4 @@
-package com.zocki.framelibrary.db;
+package com.zocki.db.library;
 
 import android.database.sqlite.SQLiteDatabase;
 
@@ -39,7 +39,7 @@ public interface IDBDaoSupport<T> {
      * @param limit
      * @return
      */
-    List<T> query( String selection, String[] selectionArgs, String orderBy, int limit );
+    List<T> query(String selection, String[] selectionArgs, String orderBy, int limit);
 
     /**
      * 指定条件查询
@@ -48,7 +48,7 @@ public interface IDBDaoSupport<T> {
      * @param orderBy
      * @return
      */
-    List<T> query( String selection, String[] selectionArgs, String orderBy );
+    List<T> query(String selection, String[] selectionArgs, String orderBy);
 
     /**
      * 指定条件查询
@@ -56,7 +56,7 @@ public interface IDBDaoSupport<T> {
      * @param selectionArgs
      * @return
      */
-    List<T> query( String selection, String[] selectionArgs );
+    List<T> query(String selection, String[] selectionArgs);
 
     /**
      * 删除
@@ -64,7 +64,7 @@ public interface IDBDaoSupport<T> {
      * @param whereArgs
      * @return
      */
-    int delete(String whereClause,String[] whereArgs);
+    int delete(String whereClause, String[] whereArgs);
 
     /**
      * 更新

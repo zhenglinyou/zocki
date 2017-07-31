@@ -1,4 +1,4 @@
-package com.zocki.framelibrary.db;
+package com.zocki.db.library;
 
 import android.text.TextUtils;
 
