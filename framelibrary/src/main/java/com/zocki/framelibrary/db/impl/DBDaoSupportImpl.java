@@ -7,12 +7,7 @@ import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.framelibrary.db.DaoUtil;
 import com.zocki.framelibrary.db.IDBDaoSupport;
 
-import java.io.File;
 import java.lang.reflect.Field;
-
-import static android.R.attr.id;
-import static android.R.attr.key;
-import static android.R.id.primary;
 
 /**
  * Created by Administrator on 2017/7/30 0030.
@@ -35,7 +30,7 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
                 .append("age integer,")
                 .append("flag boolean")
                 .append(";");*/
-        
+
         sql.append("create table if not exists")
                 .append(DaoUtil.getTableName(clazz))
                 .append("(id integer primary key autoincreament,");
