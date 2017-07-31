@@ -35,7 +35,7 @@ public class MainActivity extends BaseSkinActivity{
     protected void initData() {
     }
 
-    @OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4})
+    @OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4,R.id.button5})
     private void aliHotFix(View view) {
 
         if( view.getId() == R.id.button2 ) {
@@ -93,6 +93,14 @@ public class MainActivity extends BaseSkinActivity{
             for (Person person : persons) {
                 LogUtils.e( person );
             }
+        } else if( view.getId() == R.id.button5) {
+            IDBDaoSupport<Person> personDao = DBDaoSupportFactory.getInstance().getDao(Person.class);
+            /*List<Person> query = personDao.query();
+            for (Person person : query) {
+                LogUtils.e( person );
+            }*/
+
+            personDao.delete("name=?", new String[]{"zhangsan2"});
         }
 
        /* try {
