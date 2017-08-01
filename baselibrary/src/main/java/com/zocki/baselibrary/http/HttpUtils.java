@@ -14,7 +14,11 @@ import java.util.Map;
  */
 public class HttpUtils {
 
-    private static IHttpEngine mHttpEngine = new OkHttpEngine();
+    private static IHttpEngine mHttpEngine = null;
+
+    public static void setDefalutHttpEngine(IHttpEngine httpEngine) {
+        HttpUtils.mHttpEngine = httpEngine;
+    }
 
     public static Handler handler;
 
@@ -23,7 +27,7 @@ public class HttpUtils {
     }
 
     public enum MethodType {
-        GET,POST
+        GET, POST
     }
 
     /**
@@ -38,6 +42,8 @@ public class HttpUtils {
      * 参数
      */
     private Map<String,Object> mParams;
+
+    private boolean mCache;
 
     private Context mContext;
 
@@ -84,15 +90,20 @@ public class HttpUtils {
         return this;
     }
 
+    public HttpUtils cache( boolean isCache ) {
+        this.mCache = isCache;
+        return this;
+    }
+
     public void execute(EngineCallBack callBack) {
         if( callBack == null ) {
             callBack = EngineCallBack.DEFUALT_CALL_BACK;
         }
 
         if( mMethodType == MethodType.GET ) {
-            get( mUrl, mParams, callBack );
+            get( mCache,mUrl, mParams, callBack );
         } else {
-            post( mUrl, mParams, callBack );
+            post( mCache,mUrl, mParams, callBack );
         }
     }
 
@@ -125,12 +136,12 @@ public class HttpUtils {
         return this;
     }
 
-    private void get(String url, Map<String, Object> params, EngineCallBack callBack) {
-        mHttpEngine.get(mContext,url, params, callBack);
+    private void get(boolean cache, String url, Map<String, Object> params, EngineCallBack callBack) {
+        mHttpEngine.get(cache,mContext,url, params, callBack);
     }
 
-    private void post(String url, Map<String, Object> params, EngineCallBack callBack) {
-        mHttpEngine.post(mContext,url, params, callBack);
+    private void post(boolean cache,String url, Map<String, Object> params, EngineCallBack callBack) {
+        mHttpEngine.post(cache,mContext,url, params, callBack);
     }
 
     public static Class<?> analysisClazzInfo( Object object ) {

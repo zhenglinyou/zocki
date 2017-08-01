@@ -7,4 +7,6 @@ package com.zocki.baselibrary;
 public class AppConfig {
 
     public static boolean ADB = true;
+
+    public static int HTTP_OK_CODE = 0;
 }

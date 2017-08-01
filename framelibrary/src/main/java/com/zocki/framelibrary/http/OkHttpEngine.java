@@ -1,9 +1,17 @@
-package com.zocki.baselibrary.http;
+package com.zocki.framelibrary.http;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.zocki.baselibrary.AppConfig;
+import com.zocki.baselibrary.http.EngineCallBack;
+import com.zocki.baselibrary.http.HttpUtils;
+import com.zocki.baselibrary.http.IHttpEngine;
 import com.zocki.baselibrary.logger.LogUtils;
+import com.zocki.db.library.IDBDaoSupport;
+import com.zocki.db.library.factory.DBDaoSupportFactory;
+import com.zocki.framelibrary.http.cache.CacheData;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,17 +43,17 @@ public class OkHttpEngine implements IHttpEngine {
     }
 
     @Override
-    public void get(Context context,String url, Map<String, Object> params, final EngineCallBack httpCallBack) {
+    public void get(final boolean cache, Context context, String url, Map<String, Object> params, @NonNull final EngineCallBack httpCallBack) {
 
-        url = HttpUtils.joinParams(url,params);
+        final String mKeyUrl = HttpUtils.joinParams(url,params);
 
-        if(AppConfig.ADB)
-            LogUtils.e( " 请求链接 : " + url);
+        if(AppConfig.ADB) LogUtils.e( "get 请求链接 : " + mKeyUrl);
 
-        if( httpCallBack != null ) httpCallBack.onPreExcute(context,params);
+        httpCallBack.onPreExcute(cache, mKeyUrl, context, params);
 
-        Request.Builder requestBuilder = new Request.Builder().url(url).tag(context);
+        Request.Builder requestBuilder = new Request.Builder().url(mKeyUrl).tag(context);
         Request request = requestBuilder.build();
+
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -53,17 +61,26 @@ public class OkHttpEngine implements IHttpEngine {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                final String resultJson = response.body().string();
-                httpCallBack.onSuccess(resultJson);
+            public void onResponse(Call call, @NonNull Response response) throws IOException {
+                ResponseBody body = response.body();
+                if( body != null ) {
+                    final String resultJson = body.string();
+                    httpCallBack.onSuccess(cache, true, mKeyUrl, resultJson);
+                } else {
+                    httpCallBack.onError(new NullPointerException( mKeyUrl + " respose body() is null"));
+                }
             }
         });
     }
 
     @Override
-    public void post(Context context,String url, Map<String, Object> params, final EngineCallBack httpCallBack) {
+    public void post(final boolean cache, Context context, final String url, Map<String, Object> params, final EngineCallBack httpCallBack) {
 
-        if( httpCallBack != null ) httpCallBack.onPreExcute(context,params);
+        final String mKeyUrl = HttpUtils.joinParams(url,params);
+
+        if(AppConfig.ADB) LogUtils.e( "post 请求链接 : " + mKeyUrl);
+
+        if( httpCallBack != null ) httpCallBack.onPreExcute(cache,mKeyUrl,context,params);
 
         RequestBody requestBody = appendBody(params);
         Request request = new Request.Builder()
@@ -84,7 +101,7 @@ public class OkHttpEngine implements IHttpEngine {
                         ResponseBody body = response.body();
                         if (body != null) {
                             String resultJson = body.string();
-                            executeSuccessMethod(httpCallBack, resultJson);
+                            executeSuccessMethod(cache,httpCallBack, mKeyUrl, resultJson);
                         }
                     }
                 }
@@ -135,9 +152,9 @@ public class OkHttpEngine implements IHttpEngine {
     /**
      *  执行成功的方法
      **/
-    private void executeSuccessMethod(final EngineCallBack httpCallBack, final String resultJson) {
+    private void executeSuccessMethod(boolean cache,final EngineCallBack httpCallBack, String url, final String resultJson) {
         try {
-            httpCallBack.onSuccess(resultJson);
+            httpCallBack.onSuccess(cache, true, url, resultJson);
         } catch (Exception e) {
             executeError(httpCallBack, e);
             e.printStackTrace();

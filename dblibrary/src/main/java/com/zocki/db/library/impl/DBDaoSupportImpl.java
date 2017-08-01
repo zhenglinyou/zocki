@@ -55,12 +55,12 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
 
             // type 需要进行转换 int --> integer String --> text
             String type = field.getType().getSimpleName();
-            sql.append( name ).append(" ").append(DaoUtil.getColumnType(type) ).append(", ");
+            sql.append( name ).append(" ").append(DaoUtil.getColumnType(type)).append(", ");
         }
 
-        sql.replace(sql.length()-2,sql.length(),")");
+        sql.replace(sql.length() - 2, sql.length(),")");
 
-        if(AppConfig.ADB) LogUtils.e( " create table sql = " + sql.toString() );
+        // if(AppConfig.ADB) LogUtils.e( " create table sql = " + sql.toString() );
 
         mSqLiteDatabase.execSQL( sql.toString() );
     }
@@ -79,7 +79,7 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
             mSqLiteDatabase.beginTransaction();
 
             for (T data : datas) {
-                insert(data);
+                insert( data );
             }
 
             mSqLiteDatabase.setTransactionSuccessful();

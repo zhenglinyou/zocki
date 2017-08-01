@@ -59,10 +59,11 @@ public class MainActivity extends BaseSkinActivity{
             HttpUtils.with(this).url("https://test.521meme.com/proxy/other/recommendList")
                     .addParam("pageNum", 1)
                     .addParam("pageSize", 100)
+                    .cache(true)
                     .execute(new HttpCallBack<RecoverEntity>() {
                         @Override
                         public void onSuccess(RecoverEntity result) {
-                            LogUtils.e( result );
+                            LogUtils.e( result.isNewData + " -- " + result );
                         }
                         @Override
                         public void onError(Exception e) {
@@ -79,7 +80,6 @@ public class MainActivity extends BaseSkinActivity{
             personDao.insert(personList);
 
             LogUtils.e( System.currentTimeMillis() - startTime );
-
 
         } else if( view.getId() == R.id.button4 ) {
 

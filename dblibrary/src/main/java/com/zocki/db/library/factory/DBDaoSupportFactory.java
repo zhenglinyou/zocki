@@ -3,6 +3,7 @@ package com.zocki.db.library.factory;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
+import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.db.library.IDBDaoSupport;
 import com.zocki.db.library.impl.DBDaoSupportImpl;
 
@@ -23,13 +24,17 @@ public class DBDaoSupportFactory {
         );
 
         if( !dbRoot.exists() ) {
-            dbRoot.mkdirs();
+            boolean b = dbRoot.mkdirs();
         }
 
         File dbFile = new File( dbRoot, "zocki.db");
 
         // 打开或创建一个数据库
         mSqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
+
+        LogUtils.e( mSqLiteDatabase.getVersion() );
+
+        mSqLiteDatabase.setVersion( 1 );
     }
 
     public static DBDaoSupportFactory getInstance() {

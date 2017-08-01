@@ -198,5 +198,4 @@ public class QuerySupport<T> {
 
         return methodName;
     }
-
 }
