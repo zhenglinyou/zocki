@@ -88,7 +88,8 @@ public class MainActivity extends BaseSkinActivity{
             for (Person person : query) {
                 LogUtils.e( person );
             }*/
-            List<Person> persons = personDao.query("name=?", new String[]{"zhangsan2"});
+
+            List<Person> persons = personDao.query().setSelection("name=?").setSelectionArgs(new String[]{"zhangsan2"}).setLimit(1).query();
 
             for (Person person : persons) {
                 LogUtils.e( person );

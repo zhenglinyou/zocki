@@ -2,6 +2,8 @@ package com.zocki.db.library;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.zocki.db.library.curd.QuerySupport;
+
 import java.util.List;
 
 /**
@@ -29,34 +31,7 @@ public interface IDBDaoSupport<T> {
      * 查询所有
      * @return
      */
-    List<T> query();
-
-    /**
-     * 指定条件查询
-     * @param selection
-     * @param selectionArgs
-     * @param orderBy
-     * @param limit
-     * @return
-     */
-    List<T> query(String selection, String[] selectionArgs, String orderBy, int limit);
-
-    /**
-     * 指定条件查询
-     * @param selection
-     * @param selectionArgs
-     * @param orderBy
-     * @return
-     */
-    List<T> query(String selection, String[] selectionArgs, String orderBy);
-
-    /**
-     * 指定条件查询
-     * @param selection
-     * @param selectionArgs
-     * @return
-     */
-    List<T> query(String selection, String[] selectionArgs);
+    QuerySupport<T> query();
 
     /**
      * 删除

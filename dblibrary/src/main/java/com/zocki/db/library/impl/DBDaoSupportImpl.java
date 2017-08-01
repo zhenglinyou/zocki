@@ -1,18 +1,16 @@
 package com.zocki.db.library.impl;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.zocki.baselibrary.AppConfig;
 import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.db.library.DaoUtil;
 import com.zocki.db.library.IDBDaoSupport;
+import com.zocki.db.library.curd.QuerySupport;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +21,10 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
     private Class<T> mClazz;
     private final Object[] mPutMethondAttrs = new Object[2];
     private final Map<String,Method> mPutMethods = new HashMap<>();
+    private QuerySupport<T> mQuerySupport;
 
     private boolean filterName( String name ) {
-        if( name.equals("serialVersionUID") ) return true;
-        return false;
+       return name.equals("serialVersionUID");
     }
 
     public void init(SQLiteDatabase sqLiteDatabase, Class<T> clazz) {
@@ -97,48 +95,9 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
      * @return All
      */
     @Override
-    public List<T> query() {
-        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, null, null, null, null, null);
-        return cursorToList(cursor);
-    }
-
-    /**
-     * 有条件查询
-     * @param selection
-     * @param selectionArgs
-     * @param orderBy
-     * @param limit
-     * @return
-     */
-    @Override
-    public List<T> query( String selection, String[] selectionArgs, String orderBy, int limit ) {
-        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, selection, selectionArgs, null, null, orderBy, String.valueOf(limit));
-        return cursorToList( cursor );
-    }
-
-    /**
-     * 有条件查询
-     * @param selection
-     * @param selectionArgs
-     * @param orderBy
-     * @return
-     */
-    @Override
-    public List<T> query(String selection, String[] selectionArgs, String orderBy) {
-        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, selection, selectionArgs, null, null, orderBy, null);
-        return cursorToList( cursor );
-    }
-
-    /**
-     * 有条件查询
-     * @param selection
-     * @param selectionArgs
-     * @return
-     */
-    @Override
-    public List<T> query(String selection, String[] selectionArgs) {
-        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, selection, selectionArgs, null, null, null, null);
-        return cursorToList( cursor );
+    public QuerySupport<T> query() {
+        if( mQuerySupport == null ) mQuerySupport = new QuerySupport<>(mSqLiteDatabase,mClazz);
+        return mQuerySupport;
     }
 
     @Override
@@ -150,95 +109,6 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
     public int update(T obj, String whereClause, String... whereArgs) {
         ContentValues values = transfromContentValue(obj);
         return mSqLiteDatabase.update(DaoUtil.getTableName(mClazz),values,whereClause,whereArgs);
-    }
-
-    private List<T> cursorToList(Cursor cursor) {
-        List<T> list = new ArrayList<>();
-        if( cursor != null && cursor.moveToFirst() )
-        {
-            do {
-                try {
-                    T instance = mClazz.newInstance();
-                    Field[] fields = mClazz.getDeclaredFields();
-                    for (Field field : fields) {
-                        field.setAccessible(true);
-                        String name = field.getName();
-                        int index = cursor.getColumnIndex(name);
-                        if( index < 0 ) {
-                            continue;
-                        }
-                        // 通过反射获取游标的方法
-                        Method cursorMethod = cursorMethod(field.getType());
-                        if( cursorMethod != null )
-                        {
-                            Object value = cursorMethod.invoke(cursor,index);
-                            if( value == null ) {
-                                continue;
-                            }
-
-                            Class<?> fieldType = field.getType();
-                            // 特殊部分
-                            if( fieldType == boolean.class || fieldType == Boolean.class ) {
-                                if( "0".equals(String.valueOf(value)) ) {
-                                    value = false;
-                                } else if( "1".equals(String.valueOf(value)) ) {
-                                    value = true;
-                                }
-                            } else if( fieldType == char.class || fieldType == Character.class  ) {
-                                value = value.toString().charAt(0);
-                            } else if( field.getType() == Date.class ) {
-                                long date = (long) value;
-                                if( date <= 0 ) {
-                                    value = null;
-                                } else {
-                                    value = new Date(date);
-                                }
-                            }
-                            field.set(instance,value);
-                        }
-                    }
-                    // 加入集合
-                    list.add( instance );
-                }catch (Exception e) {
-                    String message = e.getMessage();
-                    if( message.contains("has no zero argument constructor") ) {
-                        LogUtils.e( mClazz.getName() + " 需要添加无参构造函数 ");
-                    }
-                    e.printStackTrace();
-                }
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        return list;
-    }
-
-    private Method cursorMethod(Class<?> type) throws NoSuchMethodException {
-        String methodName = getColumnMethodName(type);
-        Method method = Cursor.class.getMethod(methodName,int.class);
-        return method;
-    }
-
-    private String getColumnMethodName(Class<?> fieldType) {
-
-        String typeName;
-        if( fieldType.isPrimitive() ) {
-            typeName = DaoUtil.capitalize(fieldType.getName());
-        } else {
-            typeName = fieldType.getSimpleName();
-        }
-
-        String methodName = "get" + typeName;
-        if( "getBoolean".equals(methodName) ) {
-            methodName = "getInt";
-        } else if( "getChar".equals(methodName) ) {
-            methodName = "getString";
-        } else if( "getDate".equals(methodName) ) {
-            methodName = "getLong";
-        } else if( "getInteger".equals(methodName) ) {
-            methodName = "getInt";
-        }
-
-        return methodName;
     }
 
     /**
@@ -284,7 +154,6 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
                 mPutMethondAttrs[0] = mPutMethondAttrs[1] = null;
             }
         }
-
         return values;
     }
 }
