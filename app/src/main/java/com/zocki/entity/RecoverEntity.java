@@ -6,7 +6,7 @@ import java.util.List;
  * Created by kaisheng3 on 2017/7/28.
  */
 
-public class RecoverEntity {
+public class RecoverEntity extends com.zocki.framelibrary.entity.BaseEntity {
 
     /**
      * msg : 首页推荐列表获取成功

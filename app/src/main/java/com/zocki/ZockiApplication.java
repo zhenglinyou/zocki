@@ -5,11 +5,11 @@ import android.content.pm.PackageManager;
 
 import com.alipay.euler.andfix.patch.PatchManager;
 import com.zocki.baselibrary.crash.ExceptionCrashHandler;
+import com.zocki.framelibrary.FrameLibraryInit;
 
 /**
  * Created by kaisheng3 on 2017/7/20.
  */
-
 public class ZockiApplication extends Application {
 
     // Patch管理类
@@ -20,6 +20,9 @@ public class ZockiApplication extends Application {
         super.onCreate();
         // 异常处理
         ExceptionCrashHandler.getInstance().init( this );
+
+        //
+        FrameLibraryInit.setHttpEngine( this );
 
         // Ali热修复
         try {

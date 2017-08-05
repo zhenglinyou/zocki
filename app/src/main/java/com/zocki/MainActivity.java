@@ -59,10 +59,11 @@ public class MainActivity extends BaseSkinActivity{
             HttpUtils.with(this).url("https://test.521meme.com/proxy/other/recommendList")
                     .addParam("pageNum", 1)
                     .addParam("pageSize", 100)
+                    .cache(true)
                     .execute(new HttpCallBack<RecoverEntity>() {
                         @Override
                         public void onSuccess(RecoverEntity result) {
-                            LogUtils.e( result );
+                            LogUtils.e( result.isNewData + " -- " + result );
                         }
                         @Override
                         public void onError(Exception e) {
@@ -80,7 +81,6 @@ public class MainActivity extends BaseSkinActivity{
 
             LogUtils.e( System.currentTimeMillis() - startTime );
 
-
         } else if( view.getId() == R.id.button4 ) {
 
             IDBDaoSupport<Person> personDao = DBDaoSupportFactory.getInstance().getDao(Person.class);
@@ -88,7 +88,8 @@ public class MainActivity extends BaseSkinActivity{
             for (Person person : query) {
                 LogUtils.e( person );
             }*/
-            List<Person> persons = personDao.query("name=?", new String[]{"zhangsan2"});
+
+            List<Person> persons = personDao.query().setSelection("name=?").setSelectionArgs(new String[]{"zhangsan2"}).setLimit(1).query();
 
             for (Person person : persons) {
                 LogUtils.e( person );

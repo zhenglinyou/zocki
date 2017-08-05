@@ -8,6 +8,7 @@ import com.zocki.baselibrary.AppConfig;
 import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.db.library.DaoUtil;
 import com.zocki.db.library.IDBDaoSupport;
+import com.zocki.db.library.curd.QuerySupport;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,10 +24,10 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
     private Class<T> mClazz;
     private final Object[] mPutMethondAttrs = new Object[2];
     private final Map<String,Method> mPutMethods = new HashMap<>();
+    private QuerySupport<T> mQuerySupport;
 
     private boolean filterName( String name ) {
-        if( name.equals("serialVersionUID") ) return true;
-        return false;
+       return name.equals("serialVersionUID");
     }
 
     public void init(SQLiteDatabase sqLiteDatabase, Class<T> clazz) {
@@ -57,12 +58,12 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
 
             // type 需要进行转换 int --> integer String --> text
             String type = field.getType().getSimpleName();
-            sql.append( name ).append(" ").append(DaoUtil.getColumnType(type) ).append(", ");
+            sql.append( name ).append(" ").append(DaoUtil.getColumnType(type)).append(", ");
         }
 
-        sql.replace(sql.length()-2,sql.length(),")");
+        sql.replace(sql.length() - 2, sql.length(),")");
 
-        if(AppConfig.ADB) LogUtils.e( " create table sql = " + sql.toString() );
+        // if(AppConfig.ADB) LogUtils.e( " create table sql = " + sql.toString() );
 
         mSqLiteDatabase.execSQL( sql.toString() );
     }
@@ -81,7 +82,7 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
             mSqLiteDatabase.beginTransaction();
 
             for (T data : datas) {
-                insert(data);
+                insert( data );
             }
 
             mSqLiteDatabase.setTransactionSuccessful();
@@ -97,48 +98,9 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
      * @return All
      */
     @Override
-    public List<T> query() {
-        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, null, null, null, null, null);
-        return cursorToList(cursor);
-    }
-
-    /**
-     * 有条件查询
-     * @param selection
-     * @param selectionArgs
-     * @param orderBy
-     * @param limit
-     * @return
-     */
-    @Override
-    public List<T> query( String selection, String[] selectionArgs, String orderBy, int limit ) {
-        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, selection, selectionArgs, null, null, orderBy, String.valueOf(limit));
-        return cursorToList( cursor );
-    }
-
-    /**
-     * 有条件查询
-     * @param selection
-     * @param selectionArgs
-     * @param orderBy
-     * @return
-     */
-    @Override
-    public List<T> query(String selection, String[] selectionArgs, String orderBy) {
-        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, selection, selectionArgs, null, null, orderBy, null);
-        return cursorToList( cursor );
-    }
-
-    /**
-     * 有条件查询
-     * @param selection
-     * @param selectionArgs
-     * @return
-     */
-    @Override
-    public List<T> query(String selection, String[] selectionArgs) {
-        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), null, selection, selectionArgs, null, null, null, null);
-        return cursorToList( cursor );
+    public QuerySupport<T> query() {
+        if( mQuerySupport == null ) mQuerySupport = new QuerySupport<>(mSqLiteDatabase,mClazz);
+        return mQuerySupport;
     }
 
     @Override
@@ -151,6 +113,7 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
         ContentValues values = transfromContentValue(obj);
         return mSqLiteDatabase.update(DaoUtil.getTableName(mClazz),values,whereClause,whereArgs);
     }
+
 
     private List<T> cursorToList(Cursor cursor) {
         List<T> list = new ArrayList<>();
@@ -287,7 +250,6 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
                 mPutMethondAttrs[0] = mPutMethondAttrs[1] = null;
             }
         }
-
         return values;
     }
 }

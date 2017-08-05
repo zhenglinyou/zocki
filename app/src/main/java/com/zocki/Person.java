@@ -13,6 +13,9 @@ public class Person {
 
     private boolean uflag = true;
 
+    public Person() {
+    }
+
     public boolean isFlag() {
         return flag;
     }
@@ -29,8 +32,6 @@ public class Person {
         this.uflag = uflag;
     }
 
-    public Person() {
-    }
 
     public Person(String zhangsan, int i) {
         this.name = zhangsan;
