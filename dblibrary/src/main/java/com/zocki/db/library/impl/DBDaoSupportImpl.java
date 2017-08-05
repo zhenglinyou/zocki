@@ -154,61 +154,64 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
 
     private List<T> cursorToList(Cursor cursor) {
         List<T> list = new ArrayList<>();
-        if( cursor != null && cursor.moveToFirst() )
-        {
-            do {
-                try {
-                    T instance = mClazz.newInstance();
-                    Field[] fields = mClazz.getDeclaredFields();
-                    for (Field field : fields) {
-                        field.setAccessible(true);
-                        String name = field.getName();
-                        int index = cursor.getColumnIndex(name);
-                        if( index < 0 ) {
-                            continue;
-                        }
-                        // 通过反射获取游标的方法
-                        Method cursorMethod = cursorMethod(field.getType());
-                        if( cursorMethod != null )
-                        {
-                            Object value = cursorMethod.invoke(cursor,index);
-                            if( value == null ) {
+        try {
+            if( cursor != null && cursor.moveToFirst() )
+            {
+                do {
+                    try {
+                        T instance = mClazz.newInstance();
+                        Field[] fields = mClazz.getDeclaredFields();
+                        for (Field field : fields) {
+                            field.setAccessible(true);
+                            String name = field.getName();
+                            int index = cursor.getColumnIndex(name);
+                            if( index < 0 ) {
                                 continue;
                             }
+                            // 通过反射获取游标的方法
+                            Method cursorMethod = cursorMethod(field.getType());
+                            if( cursorMethod != null )
+                            {
+                                Object value = cursorMethod.invoke(cursor,index);
+                                if( value == null ) {
+                                    continue;
+                                }
 
-                            Class<?> fieldType = field.getType();
-                            // 特殊部分
-                            if( fieldType == boolean.class || fieldType == Boolean.class ) {
-                                if( "0".equals(String.valueOf(value)) ) {
-                                    value = false;
-                                } else if( "1".equals(String.valueOf(value)) ) {
-                                    value = true;
+                                Class<?> fieldType = field.getType();
+                                // 特殊部分
+                                if( fieldType == boolean.class || fieldType == Boolean.class ) {
+                                    if( "0".equals(String.valueOf(value)) ) {
+                                        value = false;
+                                    } else if( "1".equals(String.valueOf(value)) ) {
+                                        value = true;
+                                    }
+                                } else if( fieldType == char.class || fieldType == Character.class  ) {
+                                    value = value.toString().charAt(0);
+                                } else if( field.getType() == Date.class ) {
+                                    long date = (long) value;
+                                    if( date <= 0 ) {
+                                        value = null;
+                                    } else {
+                                        value = new Date(date);
+                                    }
                                 }
-                            } else if( fieldType == char.class || fieldType == Character.class  ) {
-                                value = value.toString().charAt(0);
-                            } else if( field.getType() == Date.class ) {
-                                long date = (long) value;
-                                if( date <= 0 ) {
-                                    value = null;
-                                } else {
-                                    value = new Date(date);
-                                }
+                                field.set(instance,value);
                             }
-                            field.set(instance,value);
                         }
+                        // 加入集合
+                        list.add( instance );
+                    }catch (Exception e) {
+                        String message = e.getMessage();
+                        if( message.contains("has no zero argument constructor") ) {
+                            LogUtils.e( mClazz.getName() + " 需要添加无参构造函数 ");
+                        }
+                        e.printStackTrace();
                     }
-                    // 加入集合
-                    list.add( instance );
-                }catch (Exception e) {
-                    String message = e.getMessage();
-                    if( message.contains("has no zero argument constructor") ) {
-                        LogUtils.e( mClazz.getName() + " 需要添加无参构造函数 ");
-                    }
-                    e.printStackTrace();
-                }
-            }while (cursor.moveToNext());
+                }while (cursor.moveToNext());
+            }
+        } finally {
+            if( cursor != null) cursor.close();
         }
-        cursor.close();
         return list;
     }
 
