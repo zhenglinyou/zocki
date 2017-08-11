@@ -146,7 +146,6 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
         return dataFormat.format(currentTime);
     }
 
-
     /**
      * 获取一些简单的信息,软件版本，手机版本，型号等信息存放在HashMap中
      * @return

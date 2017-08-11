@@ -1,22 +1,48 @@
 package com.zocki;
 
+import android.content.res.AssetManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.os.Environment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.zocki.baselibrary.dialog.AlertDialog;
 import com.zocki.baselibrary.http.HttpUtils;
 import com.zocki.baselibrary.ioc.OnClick;
+import com.zocki.baselibrary.ioc.ViewId;
 import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.db.library.IDBDaoSupport;
 import com.zocki.db.library.factory.DBDaoSupportFactory;
 import com.zocki.entity.RecoverEntity;
 import com.zocki.framelibrary.BaseSkinActivity;
 import com.zocki.framelibrary.http.HttpCallBack;
+import com.zocki.framelibrary.skin.SkinManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 public class MainActivity extends BaseSkinActivity{
+
+    @ViewId(R.id.image)
+    private ImageView imageView;
+
+    @ViewId(R.id.button9)
+    private Button button9;
 
     @Override
     protected void setContentView() {
@@ -29,13 +55,22 @@ public class MainActivity extends BaseSkinActivity{
 
     @Override
     protected void initView() {
+
+        button9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtils.e( "asdfasdf" );
+            }
+        });
+
+        button9.setClickable(false);
     }
 
     @Override
     protected void initData() {
     }
 
-    @OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4,R.id.button5})
+    @OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4,R.id.button5,R.id.button6,R.id.button7,R.id.button8})
     private void aliHotFix(View view) {
 
         if( view.getId() == R.id.button2 ) {
@@ -102,8 +137,27 @@ public class MainActivity extends BaseSkinActivity{
             }*/
 
             personDao.delete("name=?", new String[]{"zhangsan2"});
-        }
+        } else if( view.getId() == R.id.button6 ) {
 
+
+        } else if( view.getId() == R.id.button7 ) {
+            Toast.makeText(this,"换肤",Toast.LENGTH_SHORT).show();
+            try {
+                String skinPath = Environment.getExternalStorageDirectory().getCanonicalPath() + File.separator + "skin.skin";
+                int result = SkinManager.getInstance().loadSkin(skinPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if( view.getId() == R.id.button8 ) {
+            Toast.makeText(this,"恢复皮肤",Toast.LENGTH_SHORT).show();
+
+            try {
+                int result = SkinManager.getInstance().restore();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
        /* try {
             // 测试 目前暂且放在本地
             String patchFileString =  Environment.getExternalStorageDirectory()+"/fix.apatch";
