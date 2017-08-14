@@ -1,22 +1,11 @@
 package com.zocki;
 
-import android.content.res.AssetManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
+import android.content.Intent;
 import android.os.Environment;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.zocki.baselibrary.dialog.AlertDialog;
 import com.zocki.baselibrary.http.HttpUtils;
 import com.zocki.baselibrary.ioc.OnClick;
@@ -31,18 +20,13 @@ import com.zocki.framelibrary.skin.SkinManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 public class MainActivity extends BaseSkinActivity{
 
     @ViewId(R.id.image)
     private ImageView imageView;
-
-    @ViewId(R.id.button9)
-    private Button button9;
 
     @Override
     protected void setContentView() {
@@ -55,22 +39,13 @@ public class MainActivity extends BaseSkinActivity{
 
     @Override
     protected void initView() {
-
-        button9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LogUtils.e( "asdfasdf" );
-            }
-        });
-
-        button9.setClickable(false);
     }
 
     @Override
     protected void initData() {
     }
 
-    @OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4,R.id.button5,R.id.button6,R.id.button7,R.id.button8})
+    @OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4,R.id.button5,R.id.button6,R.id.button7,R.id.button8,R.id.button10})
     private void aliHotFix(View view) {
 
         if( view.getId() == R.id.button2 ) {
@@ -123,7 +98,6 @@ public class MainActivity extends BaseSkinActivity{
             for (Person person : query) {
                 LogUtils.e( person );
             }*/
-
             List<Person> persons = personDao.query().setSelection("name=?").setSelectionArgs(new String[]{"zhangsan2"}).setLimit(1).query();
 
             for (Person person : persons) {
@@ -135,13 +109,14 @@ public class MainActivity extends BaseSkinActivity{
             for (Person person : query) {
                 LogUtils.e( person );
             }*/
-
             personDao.delete("name=?", new String[]{"zhangsan2"});
         } else if( view.getId() == R.id.button6 ) {
 
 
         } else if( view.getId() == R.id.button7 ) {
+
             Toast.makeText(this,"换肤",Toast.LENGTH_SHORT).show();
+
             try {
                 String skinPath = Environment.getExternalStorageDirectory().getCanonicalPath() + File.separator + "skin.skin";
                 int result = SkinManager.getInstance().loadSkin(skinPath);
@@ -151,14 +126,16 @@ public class MainActivity extends BaseSkinActivity{
 
         } else if( view.getId() == R.id.button8 ) {
             Toast.makeText(this,"恢复皮肤",Toast.LENGTH_SHORT).show();
-
             try {
-                int result = SkinManager.getInstance().restore();
+                int result = SkinManager.getInstance().restoreDefaultSkin();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if( view.getId() == R.id.button10 ) {
+            Intent intent = new Intent( this,MainActivity.class );
+            startActivity(intent);
         }
-       /* try {
+        /*try {
             // 测试 目前暂且放在本地
             String patchFileString =  Environment.getExternalStorageDirectory()+"/fix.apatch";
             Log.e("TAG", patchFileString);

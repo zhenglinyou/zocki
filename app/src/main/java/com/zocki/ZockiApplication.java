@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import com.alipay.euler.andfix.patch.PatchManager;
 import com.zocki.baselibrary.crash.ExceptionCrashHandler;
 import com.zocki.framelibrary.FrameLibraryInit;
+import com.zocki.framelibrary.skin.SkinManager;
 
 /**
  * Created by kaisheng3 on 2017/7/20.
@@ -23,6 +24,8 @@ public class ZockiApplication extends Application {
 
         //
         FrameLibraryInit.setHttpEngine( this );
+
+        SkinManager.getInstance().init(getApplicationContext());
 
         // Ali热修复
         try {

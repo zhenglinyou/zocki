@@ -7,18 +7,12 @@ import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
-import android.widget.ImageView;
 
-import com.zocki.framelibrary.R;
-
-import java.io.File;
 import java.lang.reflect.Method;
 
 /**
  * Created by kaisheng3 on 2017/8/10.
  */
-
 public class SkinResource {
 
     // 整个资源通过此对象获取

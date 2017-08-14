@@ -16,8 +16,10 @@ import android.view.ViewParent;
 
 import com.zocki.baselibrary.activity.BaseActivity;
 import com.zocki.baselibrary.logger.LogUtils;
+import com.zocki.framelibrary.callback.ISkinChangeListener;
 import com.zocki.framelibrary.skin.SkinAttrSupport;
 import com.zocki.framelibrary.skin.SkinManager;
+import com.zocki.framelibrary.skin.SkinResource;
 import com.zocki.framelibrary.skin.attr.SkinAttr;
 import com.zocki.framelibrary.skin.attr.SkinView;
 import com.zocki.framelibrary.skin.support.SkinAppCompatViewInflater;
@@ -32,7 +34,8 @@ import java.util.List;
  * Created by kaisheng3 on 2017/7/20.
  * 换肤
  */
-public abstract class BaseSkinActivity extends BaseActivity implements LayoutInflaterFactory {
+public abstract class BaseSkinActivity extends BaseActivity
+        implements LayoutInflaterFactory, ISkinChangeListener {
 
     private SkinAppCompatViewInflater mAppCompatViewInflater;
 
@@ -56,6 +59,11 @@ public abstract class BaseSkinActivity extends BaseActivity implements LayoutInf
             e.printStackTrace();
         }
 
+        // 是否需要更换皮肤
+        if(SkinManager.getInstance().isChanageSkin()) {
+            changeSkin(SkinManager.getInstance().getSkinResource());
+        }
+
         // super.onCreate要在设置之后
         super.onCreate(savedInstanceState);
     }
@@ -76,11 +84,15 @@ public abstract class BaseSkinActivity extends BaseActivity implements LayoutInf
 
         // 2.解析属性 src textColor background
         if( view != null ) {
+
             List<SkinAttr> skinAttrs = SkinAttrSupport.getSkinAttrs(context, attrs);
             SkinView skinView = new SkinView(view,skinAttrs);
 
             // 3.统一交给SkinManager管理
             marginSkinView(skinView);
+
+            // 4.预处理已经加载过的皮肤
+            SkinManager.getInstance().checkChangeSkin(skinView);
         }
 
         return view;
@@ -146,5 +158,16 @@ public abstract class BaseSkinActivity extends BaseActivity implements LayoutInf
             }
             parent = parent.getParent();
         }
+    }
+
+    @Override
+    public void changeSkin(SkinResource skinResource) {
+        LogUtils.e( "更换皮肤" );
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unRegiste(this);
     }
 }
