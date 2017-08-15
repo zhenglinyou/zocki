@@ -13,6 +13,7 @@
         >
 
         <Button
+            android:visibility="gone"
             android:background="@color/main_button_color"
             android:id="@+id/button"
             android:layout_width="match_parent"
@@ -20,6 +21,7 @@
             android:text="热"/>
 
         <Button
+            android:visibility="gone"
             android:layout_marginTop="5dip"
             android:background="@color/main_button_color"
             android:id="@+id/button1"
@@ -28,6 +30,7 @@
             android:text="热2"/>
 
         <Button
+            android:visibility="gone"
             android:layout_marginTop="5dip"
             android:background="@color/main_button_color"
             android:id="@+id/button2"
@@ -44,6 +47,7 @@
             android:text="数据库"/>
 
         <Button
+            android:visibility="gone"
             android:layout_marginTop="5dip"
             android:background="@color/main_button_color"
             android:id="@+id/button4"
@@ -52,6 +56,7 @@
             android:text="查询"/>
 
         <Button
+            android:visibility="gone"
             android:layout_marginTop="5dip"
             android:background="@color/main_button_color"
             android:id="@+id/button5"
@@ -89,6 +94,14 @@
             android:background="@color/main_button_color"
             android:text="跳转"
             android:id="@+id/button10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:layout_marginTop="5dip"
+            android:background="@color/main_button_color"
+            android:text="aidl获取用户名"
+            android:id="@+id/button11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

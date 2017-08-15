@@ -15,8 +15,7 @@ import java.util.List;
 /**
  * Created by kaisheng3 on 2017/8/1.
  */
-
-public class QuerySupport<T> {
+public class Query<T> {
 
     private SQLiteDatabase mSqLiteDatabase;
 
@@ -37,7 +36,7 @@ public class QuerySupport<T> {
     // 分组
     private String mGroupBy;
 
-    public QuerySupport(SQLiteDatabase sqLiteDatabase, Class<T> clazz ) {
+    public Query(SQLiteDatabase sqLiteDatabase, Class<T> clazz ) {
         this.mSqLiteDatabase = sqLiteDatabase;
         this.mClazz = clazz;
     }
@@ -47,7 +46,7 @@ public class QuerySupport<T> {
      * @param selection
      * @return
      */
-    public QuerySupport<T> setSelection( String selection ) {
+    public Query<T> setSelection(String selection ) {
         this.mSelection = selection;
         return this;
     }
@@ -57,22 +56,22 @@ public class QuerySupport<T> {
      * @param selectionArgs
      * @return
      */
-    public QuerySupport<T> setSelectionArgs(String[] selectionArgs) {
+    public Query<T> setSelectionArgs(String[] selectionArgs) {
         this.mSelectionArgs = selectionArgs;
         return this;
     }
 
-    public QuerySupport<T> setLimit( int limit ) {
+    public Query<T> setLimit(int limit ) {
         this.mLimit = String.valueOf(limit);
         return this;
     }
 
-    public QuerySupport<T> setColumns( String[] columns ) {
+    public Query<T> setColumns(String[] columns ) {
         this.mColumns = columns;
         return this;
     }
 
-    public QuerySupport<T> setHaving(String having) {
+    public Query<T> setHaving(String having) {
         this.mHaving = having;
         return this;
     }
@@ -82,12 +81,12 @@ public class QuerySupport<T> {
      * @param orderBy
      * @return
      */
-    public QuerySupport<T> setOrderBy( String orderBy) {
+    public Query<T> setOrderBy(String orderBy) {
         this.mOrderBy = orderBy;
         return this;
     }
 
-    public QuerySupport<T> setGroupBy( String groupBy) {
+    public Query<T> setGroupBy(String groupBy) {
         this.mGroupBy = groupBy;
         return this;
     }

@@ -2,16 +2,12 @@ package com.zocki.framelibrary.http;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.zocki.baselibrary.AppConfig;
 import com.zocki.baselibrary.http.EngineCallBack;
 import com.zocki.baselibrary.http.HttpUtils;
 import com.zocki.baselibrary.http.IHttpEngine;
 import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.db.library.IDBDaoSupport;
-import com.zocki.db.library.factory.DBDaoSupportFactory;
-import com.zocki.framelibrary.http.cache.CacheData;
 
 import java.io.File;
 import java.io.IOException;

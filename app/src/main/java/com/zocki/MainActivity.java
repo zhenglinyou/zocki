@@ -1,7 +1,14 @@
 package com.zocki;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Environment;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -11,8 +18,11 @@ import com.zocki.baselibrary.http.HttpUtils;
 import com.zocki.baselibrary.ioc.OnClick;
 import com.zocki.baselibrary.ioc.ViewId;
 import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.db.library.IDBDaoSupport;
-import com.zocki.db.library.factory.DBDaoSupportFactory;
+import com.zocki.binder.JobWakeUpService;
+import com.zocki.binder.MessageService;
+import com.zocki.binder.ProtectService;
+import com.zocki.db.library.IDBDao;
+import com.zocki.db.library.factory.DBDaoFactory;
 import com.zocki.entity.RecoverEntity;
 import com.zocki.framelibrary.BaseSkinActivity;
 import com.zocki.framelibrary.http.HttpCallBack;
@@ -27,6 +37,18 @@ public class MainActivity extends BaseSkinActivity{
 
     @ViewId(R.id.image)
     private ImageView imageView;
+
+    private UserAidl mUserAidl;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mUserAidl = UserAidl.Stub.asInterface(service);
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+    };
 
     @Override
     protected void setContentView() {
@@ -43,9 +65,22 @@ public class MainActivity extends BaseSkinActivity{
 
     @Override
     protected void initData() {
+        // 启动服务
+        startService(new Intent(this, MessageService.class));
+
+        startService(new Intent(this, ProtectService.class));
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startService(new Intent(this, JobWakeUpService.class));
+        }
+
+        // 连接服务
+        /*Intent intent = new Intent(this,MessageService.class);
+        intent.setAction("com.study.aidl.user");
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);*/
     }
 
-    @OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4,R.id.button5,R.id.button6,R.id.button7,R.id.button8,R.id.button10})
+    @OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4,R.id.button5,R.id.button6,R.id.button7,R.id.button8,R.id.button10,R.id.button11})
     private void aliHotFix(View view) {
 
         if( view.getId() == R.id.button2 ) {
@@ -84,7 +119,7 @@ public class MainActivity extends BaseSkinActivity{
 
             long startTime = System.currentTimeMillis();
 
-            IDBDaoSupport<Person> personDao = DBDaoSupportFactory.getInstance().getDao(Person.class);
+            IDBDao<Person> personDao = DBDaoFactory.getInstance().getDao(Person.class);
             List<Person> personList = new ArrayList<>();
             for( int i = 0; i < 10; i++ ) personList.add( new Person("zhangsan" + i , i + 23));
             personDao.insert(personList);
@@ -93,7 +128,7 @@ public class MainActivity extends BaseSkinActivity{
 
         } else if( view.getId() == R.id.button4 ) {
 
-            IDBDaoSupport<Person> personDao = DBDaoSupportFactory.getInstance().getDao(Person.class);
+            IDBDao<Person> personDao = DBDaoFactory.getInstance().getDao(Person.class);
             /*List<Person> query = personDao.query();
             for (Person person : query) {
                 LogUtils.e( person );
@@ -104,7 +139,7 @@ public class MainActivity extends BaseSkinActivity{
                 LogUtils.e( person );
             }
         } else if( view.getId() == R.id.button5) {
-            IDBDaoSupport<Person> personDao = DBDaoSupportFactory.getInstance().getDao(Person.class);
+            IDBDao<Person> personDao = DBDaoFactory.getInstance().getDao(Person.class);
             /*List<Person> query = personDao.query();
             for (Person person : query) {
                 LogUtils.e( person );
@@ -134,6 +169,12 @@ public class MainActivity extends BaseSkinActivity{
         } else if( view.getId() == R.id.button10 ) {
             Intent intent = new Intent( this,MainActivity.class );
             startActivity(intent);
+        } else if( view.getId() == R.id.button11 ) {
+            try {
+                Toast.makeText(this,mUserAidl.getUserName() + mUserAidl.getUserPwd(),Toast.LENGTH_SHORT).show();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         /*try {
             // 测试 目前暂且放在本地

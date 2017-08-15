@@ -4,20 +4,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
 import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.db.library.IDBDaoSupport;
-import com.zocki.db.library.impl.DBDaoSupportImpl;
+import com.zocki.db.library.IDBDao;
+import com.zocki.db.library.impl.DBDaoImpl;
 
 import java.io.File;
 
 /**
  * Created by Administrator on 2017/7/30 0030.
  */
-public class DBDaoSupportFactory {
+public class DBDaoFactory {
 
-    private static DBDaoSupportFactory instance;
+    private static DBDaoFactory instance;
     private SQLiteDatabase mSqLiteDatabase;
 
-    private DBDaoSupportFactory() {
+    private DBDaoFactory() {
         // 把数据库放在内存卡里面
         File dbRoot = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
             + File.separator + "zocki" + File.separator + "database"
@@ -37,17 +37,17 @@ public class DBDaoSupportFactory {
         mSqLiteDatabase.setVersion( 1 );
     }
 
-    public static DBDaoSupportFactory getInstance() {
+    public static DBDaoFactory getInstance() {
         if(instance == null) {
-            synchronized (DBDaoSupportFactory.class) {
-                if(instance == null) instance = new DBDaoSupportFactory();
+            synchronized (DBDaoFactory.class) {
+                if(instance == null) instance = new DBDaoFactory();
             }
         }
         return instance;
     }
 
-    public <T> IDBDaoSupport<T> getDao(Class<T> clazz) {
-        IDBDaoSupport<T> daoSupport = new DBDaoSupportImpl<T>();
+    public <T> IDBDao<T> getDao(Class<T> clazz) {
+        IDBDao<T> daoSupport = new DBDaoImpl<T>();
         daoSupport.init(mSqLiteDatabase,clazz);
         return daoSupport;
     }

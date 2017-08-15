@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.zocki.db.library.DaoUtil;
-import com.zocki.db.library.IDBDaoSupport;
-import com.zocki.db.library.curd.QuerySupport;
+import com.zocki.db.library.IDBDao;
+import com.zocki.db.library.curd.Query;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,13 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
+public class DBDaoImpl<T> implements IDBDao<T> {
 
     private SQLiteDatabase mSqLiteDatabase;
     private Class<T> mClazz;
     private final Object[] mPutMethondAttrs = new Object[2];
     private final Map<String,Method> mPutMethods = new HashMap<>();
-    private QuerySupport<T> mQuerySupport;
+    private Query<T> mQuerySupport;
 
     private boolean filterName( String name ) {
        return name.equals("serialVersionUID");
@@ -93,8 +93,8 @@ public class DBDaoSupportImpl<T> implements IDBDaoSupport<T> {
      * @return All
      */
     @Override
-    public QuerySupport<T> query() {
-        if( mQuerySupport == null ) mQuerySupport = new QuerySupport<>(mSqLiteDatabase,mClazz);
+    public Query<T> query() {
+        if( mQuerySupport == null ) mQuerySupport = new Query<>(mSqLiteDatabase,mClazz);
         return mQuerySupport;
     }
 

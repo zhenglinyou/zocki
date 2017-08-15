@@ -2,15 +2,14 @@ package com.zocki.db.library;
 
 import android.database.sqlite.SQLiteDatabase;
 
-import com.zocki.db.library.curd.QuerySupport;
+import com.zocki.db.library.curd.Query;
 
 import java.util.List;
 
 /**
  * Created by Administrator on 2017/7/30 0030.
  */
-
-public interface IDBDaoSupport<T> {
+public interface IDBDao<T> {
 
     void init(SQLiteDatabase sqLiteDatabase, Class<T> clazz);
 
@@ -31,7 +30,7 @@ public interface IDBDaoSupport<T> {
      * 查询所有
      * @return
      */
-    QuerySupport<T> query();
+    Query<T> query();
 
     /**
      * 删除

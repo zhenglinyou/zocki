@@ -8,8 +8,8 @@ import com.zocki.baselibrary.AppConfig;
 import com.zocki.baselibrary.http.EngineCallBack;
 import com.zocki.baselibrary.http.HttpUtils;
 import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.db.library.IDBDaoSupport;
-import com.zocki.db.library.factory.DBDaoSupportFactory;
+import com.zocki.db.library.IDBDao;
+import com.zocki.db.library.factory.DBDaoFactory;
 import com.zocki.framelibrary.entity.BaseEntity;
 import com.zocki.framelibrary.http.cache.CacheData;
 
@@ -33,7 +33,7 @@ public abstract class HttpCallBack<T extends BaseEntity> implements EngineCallBa
 
         if(cache) {
             // 可以去线程调度
-            IDBDaoSupport<CacheData> daoSupport = DBDaoSupportFactory.getInstance().getDao(CacheData.class);
+            IDBDao<CacheData> daoSupport = DBDaoFactory.getInstance().getDao(CacheData.class);
             List<CacheData> cacheDatas = daoSupport.query()
                     .setSelection("key=?")
                     .setSelectionArgs(new String[]{url})
@@ -76,7 +76,7 @@ public abstract class HttpCallBack<T extends BaseEntity> implements EngineCallBa
             if( isNeedCache && isNewData ) {
                 // 只有返回接口状态码正确，才缓存数据
                 if (analysEntity.code == AppConfig.HTTP_OK_CODE) {
-                    IDBDaoSupport<CacheData> dao = DBDaoSupportFactory.getInstance().getDao(CacheData.class);
+                    IDBDao<CacheData> dao = DBDaoFactory.getInstance().getDao(CacheData.class);
                     dao.delete("key=?", new String[]{url});
                     dao.insert(new CacheData(url, result, System.currentTimeMillis()));
                 }
