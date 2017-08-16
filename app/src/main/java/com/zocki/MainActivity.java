@@ -1,62 +1,16 @@
 package com.zocki;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Build;
-import android.os.Environment;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.view.ViewGroup;
 
-import com.zocki.baselibrary.dialog.AlertDialog;
-import com.zocki.baselibrary.http.HttpUtils;
-import com.zocki.baselibrary.ioc.OnClick;
-import com.zocki.baselibrary.ioc.ViewId;
-import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.binder.JobWakeUpService;
-import com.zocki.binder.MessageService;
-import com.zocki.binder.ProtectService;
-import com.zocki.db.library.IDBDao;
-import com.zocki.db.library.factory.DBDaoFactory;
-import com.zocki.entity.RecoverEntity;
 import com.zocki.framelibrary.BaseSkinActivity;
-import com.zocki.framelibrary.http.HttpCallBack;
-import com.zocki.framelibrary.skin.SkinManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends BaseSkinActivity{
 
-    @ViewId(R.id.image)
-    private ImageView imageView;
-
-    private UserAidl mUserAidl;
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mUserAidl = UserAidl.Stub.asInterface(service);
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    };
-
     @Override
-    protected void setContentView() {
-        setContentView(R.layout.activity_main);
-    }
-
-    @Override
-    protected void initTitle() {
+    protected int getContentResId() {
+        return R.layout.activity_main;
     }
 
     @Override
@@ -64,15 +18,29 @@ public class MainActivity extends BaseSkinActivity{
     }
 
     @Override
+    protected View getTitleView(ViewGroup parent) {
+        return LayoutInflater.from(this).inflate(R.layout.common_title,parent);
+    }
+
+    @Override
+    protected View getLoadingView(ViewGroup parent) {
+        return LayoutInflater.from(this).inflate(R.layout.loading_layout,parent);
+    }
+
+    @Override
     protected void initData() {
         // 启动服务
-        startService(new Intent(this, MessageService.class));
+        /*startService(new Intent(this, MessageService.class));
 
         startService(new Intent(this, ProtectService.class));
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            startService(new Intent(this, LiveService.class));
+        }
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             startService(new Intent(this, JobWakeUpService.class));
-        }
+        }*/
 
         // 连接服务
         /*Intent intent = new Intent(this,MessageService.class);
@@ -80,7 +48,7 @@ public class MainActivity extends BaseSkinActivity{
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);*/
     }
 
-    @OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4,R.id.button5,R.id.button6,R.id.button7,R.id.button8,R.id.button10,R.id.button11})
+    /*@OnClick({R.id.button,R.id.button2,R.id.button3,R.id.button4,R.id.button5,R.id.button6,R.id.button7,R.id.button8,R.id.button10,R.id.button11})
     private void aliHotFix(View view) {
 
         if( view.getId() == R.id.button2 ) {
@@ -121,7 +89,7 @@ public class MainActivity extends BaseSkinActivity{
 
             IDBDao<Person> personDao = DBDaoFactory.getInstance().getDao(Person.class);
             List<Person> personList = new ArrayList<>();
-            for( int i = 0; i < 10; i++ ) personList.add( new Person("zhangsan" + i , i + 23));
+            for( int i = 0; i < 5000; i++ ) personList.add( new Person("zhangsan" + i , i + 23));
             personDao.insert(personList);
 
             LogUtils.e( System.currentTimeMillis() - startTime );
@@ -129,10 +97,10 @@ public class MainActivity extends BaseSkinActivity{
         } else if( view.getId() == R.id.button4 ) {
 
             IDBDao<Person> personDao = DBDaoFactory.getInstance().getDao(Person.class);
-            /*List<Person> query = personDao.query();
+            *//*List<Person> query = personDao.query();
             for (Person person : query) {
                 LogUtils.e( person );
-            }*/
+            }*//*
             List<Person> persons = personDao.query().setSelection("name=?").setSelectionArgs(new String[]{"zhangsan2"}).setLimit(1).query();
 
             for (Person person : persons) {
@@ -140,10 +108,10 @@ public class MainActivity extends BaseSkinActivity{
             }
         } else if( view.getId() == R.id.button5) {
             IDBDao<Person> personDao = DBDaoFactory.getInstance().getDao(Person.class);
-            /*List<Person> query = personDao.query();
+            *//*List<Person> query = personDao.query();
             for (Person person : query) {
                 LogUtils.e( person );
-            }*/
+            }*//*
             personDao.delete("name=?", new String[]{"zhangsan2"});
         } else if( view.getId() == R.id.button6 ) {
 
@@ -170,13 +138,8 @@ public class MainActivity extends BaseSkinActivity{
             Intent intent = new Intent( this,MainActivity.class );
             startActivity(intent);
         } else if( view.getId() == R.id.button11 ) {
-            try {
-                Toast.makeText(this,mUserAidl.getUserName() + mUserAidl.getUserPwd(),Toast.LENGTH_SHORT).show();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
         }
-        /*try {
+        *//*try {
             // 测试 目前暂且放在本地
             String patchFileString =  Environment.getExternalStorageDirectory()+"/fix.apatch";
             Log.e("TAG", patchFileString);
@@ -186,6 +149,6 @@ public class MainActivity extends BaseSkinActivity{
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Bug修复失败", Toast.LENGTH_LONG).show();
-        }*/
-    }
+        }*//*
+    }*/
 }

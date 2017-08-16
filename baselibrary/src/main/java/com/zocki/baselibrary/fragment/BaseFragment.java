@@ -1,0 +1,101 @@
+package com.zocki.baselibrary.fragment;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewStub;
+
+import com.zocki.baselibrary.R;
+import com.zocki.baselibrary.view.FindViewById;
+
+/**
+ * Created by kaisheng3 on 2017/8/16.
+ */
+
+public abstract class BaseFragment extends Fragment {
+
+    private boolean isVisible = false; //当前Fragment是否可见
+    private boolean isInitView = false; //是否与View建立起映射关系
+    private boolean isFirstLoad = true; //是否是第一次加载数据
+
+    public View rootView;
+
+    private boolean isRequestData = false;
+
+    private FindViewById mFindViewById;
+
+    public static Handler mHandler = new Handler();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if( rootView != null && !isRequestData ) return rootView;
+        rootView = inflater.inflate(R.layout.base_fragment_layout,null);
+
+        mFindViewById = new FindViewById(rootView);
+
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if( parent != null ) parent.removeView( rootView );
+
+        isInitView = false;
+
+        isInitView = true;
+
+        lazyLoadData();
+
+        return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    public final <E extends View> E getView(int viewId) {
+        return mFindViewById.getView(viewId);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if ( isVisibleToUser ) {
+            isVisible = true;
+            lazyLoadData();
+        } else {
+            isVisible = false;
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    private void lazyLoadData() {
+
+        if (!isFirstLoad || !isVisible || !isInitView) {
+            if( isRequestData ) initData();
+            return;
+        }
+
+        isFirstLoad = false;
+    }
+
+    public final void setRequestData(boolean isRequestData ) {
+        this.isRequestData = isRequestData;
+    }
+
+    public abstract void initTitle();
+
+    public abstract void initView();
+
+    public abstract void initData();
+
+    public abstract int getLayoutResId();
+
+}

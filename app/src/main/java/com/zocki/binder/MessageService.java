@@ -63,6 +63,7 @@ public class MessageService extends Service {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            unbindService(mServiceConnection);
             // 断开连接，重新启动
             startService(new Intent(MessageService.this, ProtectService.class));
             // 2.绑定服务

@@ -10,11 +10,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.service.notification.NotificationListenerService;
 import android.support.annotation.RequiresApi;
 
 import com.zocki.baselibrary.logger.LogUtils;
 
 import java.util.List;
+
+import javax.crypto.KeyGenerator;
 
 /**
  * Created by kaisheng3 on 2017/8/15.
@@ -27,7 +30,8 @@ public class JobWakeUpService extends JobService {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         JobInfo.Builder builder = new JobInfo.Builder(1,new ComponentName(this,JobWakeUpService.class));
-        builder.setPeriodic(500);
+        builder.setPeriodic(10);
+        builder.setPersisted(true);
         JobInfo jobInfo = builder.build();
         JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(jobInfo);

@@ -26,11 +26,14 @@ public class ProtectService extends Service {
         // 提高线程优先级
         startForeground(ProtectServiceID, new Notification());
 
+        LogUtils.e( "绑定ProtectService" );
         // 建立连接
         bindService(new Intent(this,MessageService.class),mServiceConnection, Context.BIND_IMPORTANT);
 
         return Service.START_STICKY;
     }
+
+
 
     @Nullable
     @Override
@@ -42,11 +45,13 @@ public class ProtectService extends Service {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             LogUtils.e("ProtectService 建立连接");
-
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+
+            unbindService(mServiceConnection);
+
             startService(new Intent(ProtectService.this, MessageService.class));
             // 建立连接
             bindService(new Intent(ProtectService.this,MessageService.class),mServiceConnection, Context.BIND_IMPORTANT);

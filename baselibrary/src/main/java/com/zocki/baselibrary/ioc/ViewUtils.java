@@ -23,7 +23,7 @@ public class ViewUtils {
         inject(new ViewFinder(view), object);
     }
 
-    public static void inject( ViewFinder viewFinder, Object object ) {
+    public static void inject(ViewFinder viewFinder, Object object) {
         injectFiled(viewFinder,object);
         injectEvent(viewFinder,object);
     }

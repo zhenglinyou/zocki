@@ -85,6 +85,8 @@ public abstract class BaseSkinActivity extends BaseActivity
         // 2.解析属性 src textColor background
         if( view != null ) {
 
+            // LogUtils.e( view.getClass().getName() );
+
             List<SkinAttr> skinAttrs = SkinAttrSupport.getSkinAttrs(context, attrs);
             SkinView skinView = new SkinView(view,skinAttrs);
 
