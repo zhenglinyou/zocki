@@ -1,12 +1,31 @@
 package com.zocki;
 
-import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 
+import com.zocki.baselibrary.fragment.BaseFragment;
+import com.zocki.baselibrary.ioc.ViewId;
+import com.zocki.fragment.Button1Fragment;
+import com.zocki.fragment.Button2Fragment;
+import com.zocki.fragment.Button3Fragment;
+import com.zocki.fragment.Button4Fragment;
 import com.zocki.framelibrary.BaseSkinActivity;
+import com.zocki.mainbutton.MainButton;
 
 public class MainActivity extends BaseSkinActivity{
+
+    @ViewId(R.id.viewpager)
+    private ViewPager mMainViewpager;
+
+    @ViewId(R.id.main_button)
+    private MainButton mMainButton;
+
+    private BaseFragment button1Fragment = new Button1Fragment();
+    private BaseFragment button2Fragment = new Button2Fragment();
+    private BaseFragment button3Fragment = new Button3Fragment();
+    private BaseFragment button4Fragment = new Button4Fragment();
 
     @Override
     protected int getContentResId() {
@@ -15,9 +34,33 @@ public class MainActivity extends BaseSkinActivity{
 
     @Override
     protected void initView() {
+        mMainViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                switch (position) {
+                    case 0: return button1Fragment;
+                    case 1: return button2Fragment;
+                    case 2: return button3Fragment;
+                    case 3: return button4Fragment;
+                }
+                return null;
+            }
+
+            @Override
+            public int getCount() {
+                return 4;
+            }
+        });
+
+        mMainButton.setOnItemClickListener(new MainButton.OnItemClickListener() {
+            @Override
+            public void itemClick(int position) {
+                mMainViewpager.setCurrentItem(position);
+            }
+        });
     }
 
-    @Override
+   /* @Override
     protected View getTitleView(ViewGroup parent) {
         return LayoutInflater.from(this).inflate(R.layout.common_title,parent);
     }
@@ -25,7 +68,7 @@ public class MainActivity extends BaseSkinActivity{
     @Override
     protected View getLoadingView(ViewGroup parent) {
         return LayoutInflater.from(this).inflate(R.layout.loading_layout,parent);
-    }
+    }*/
 
     @Override
     protected void initData() {

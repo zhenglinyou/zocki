@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RadioGroup
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/button1"
+            android:drawableTop="@mipmap/ic_launcher_round"
+            android:gravity="center"
+            android:button="@null"
+            android:layout_weight="1"
+            android:text="按钮1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <RadioButton
+            android:id="@+id/button2"
+            android:drawableTop="@mipmap/ic_launcher_round"
+            android:gravity="center"
+            android:button="@null"
+            android:layout_weight="1"
+            android:text="按钮2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <RadioButton
+            android:id="@+id/button3"
+            android:drawableTop="@mipmap/ic_launcher_round"
+            android:gravity="center"
+            android:button="@null"
+            android:layout_weight="1"
+            android:text="按钮3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <RadioButton
+            android:id="@+id/button4"
+            android:drawableTop="@mipmap/ic_launcher_round"
+            android:gravity="center"
+            android:button="@null"
+            android:layout_weight="1"
+            android:text="按钮4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </RadioGroup>
+
+</LinearLayout>

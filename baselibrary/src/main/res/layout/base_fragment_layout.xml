@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    
-    <ViewStub
-        android:id="@+id/view_stub_title"
-        android:layout="@layout/framelayout_common_item"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/framelayout_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <ViewStub
+        android:visibility="gone"
+        android:layout_below="@id/framelayout_title"
+        android:id="@+id/view_stub_content"
+        android:layout="@layout/framelayout_common_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
+    <ViewStub
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:id="@+id/view_stub_loading"
+        android:layout="@layout/framelayout_common_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,124 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:orientation="vertical"
             xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/main_bg_color">
 
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:orientation="vertical"
+    <com.zocki.mainbutton.MainButton
+        android:layout_alignParentBottom="true"
+        android:id="@+id/main_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/main_bg_color"
-        >
+        android:layout_height="wrap_content"/>
 
-        <Button
-            android:visibility="gone"
-            android:background="@color/main_button_color"
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="热"/>
-
-        <Button
-            android:visibility="gone"
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:id="@+id/button1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="热2"/>
-
-        <Button
-            android:visibility="gone"
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="dialog"/>
-
-        <Button
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:id="@+id/button3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="数据库"/>
-
-        <Button
-            android:visibility="gone"
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:id="@+id/button4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="查询"/>
-
-        <Button
-            android:visibility="gone"
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:id="@+id/button5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="删除"/>
-
-        <Button
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:text="替换"
-            android:id="@+id/button6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:text="换肤"
-            android:id="@+id/button7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:duplicateParentState="true"
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:text="恢复皮肤"
-            android:id="@+id/button8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:text="跳转"
-            android:id="@+id/button10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:layout_marginTop="5dip"
-            android:background="@color/main_button_color"
-            android:text="aidl获取用户名"
-            android:id="@+id/button11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <ImageView
-            android:scaleType="fitXY"
-            android:layout_marginTop="5dip"
-            android:src="@mipmap/ic_launcher_round"
-            android:id="@+id/image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-
-    </android.support.v7.widget.LinearLayoutCompat>
-
-
+    <android.support.v4.view.ViewPager
+        android:layout_above="@id/main_button"
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>
