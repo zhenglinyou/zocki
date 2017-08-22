@@ -8,7 +8,7 @@ import com.zocki.baselibrary.AppConfig;
 import com.zocki.baselibrary.http.EngineCallBack;
 import com.zocki.baselibrary.http.HttpUtils;
 import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.db.library.IDBDao;
+import com.zocki.db.library.dao.IDBDao;
 import com.zocki.db.library.factory.DBDaoFactory;
 import com.zocki.framelibrary.entity.BaseEntity;
 import com.zocki.framelibrary.http.cache.CacheData;

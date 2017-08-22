@@ -1,0 +1,3 @@
+1、baseActivity，baseFragment抽取
+2、数据库的完善 litepal源码分析
+3、图片选择器

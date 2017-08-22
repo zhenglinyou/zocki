@@ -3,8 +3,8 @@ package com.zocki.db.library.impl;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.zocki.db.library.DaoUtil;
-import com.zocki.db.library.IDBDao;
+import com.zocki.db.library.utils.DaoUtil;
+import com.zocki.db.library.dao.IDBDao;
 import com.zocki.db.library.curd.Query;
 
 import java.lang.reflect.Field;
@@ -28,39 +28,6 @@ public class DBDaoImpl<T> implements IDBDao<T> {
     public void init(SQLiteDatabase sqLiteDatabase, Class<T> clazz) {
         this.mSqLiteDatabase = sqLiteDatabase;
         this.mClazz = clazz;
-
-        // 创建表
-        StringBuffer sql = new StringBuffer();
-        /*sql.append("create table if not exists Persion(")
-                .append("id integer primary key autoincreament,")
-                .append("name text,")
-                .append("age integer,")
-                .append("flag boolean")
-                .append(";");*/
-        
-        sql.append("CREATE TABLE IF NOT EXISTS ")
-                .append(DaoUtil.getTableName(clazz))
-                .append("(ID INTEGER PRIMARY KEY AUTOINCREMENT, ");
-
-        // 反射 获取变量名称
-        for (Field field : mClazz.getDeclaredFields()) {
-
-            if( field.isSynthetic() ) continue;
-            field.setAccessible(true);
-
-            String name = field.getName();
-            if( filterName(name) ) continue;
-
-            // type 需要进行转换 int --> integer String --> text
-            String type = field.getType().getSimpleName();
-            sql.append( name ).append(" ").append(DaoUtil.getColumnType(type)).append(", ");
-        }
-
-        sql.replace(sql.length() - 2, sql.length(),")");
-
-        // if(AppConfig.ADB) LogUtils.e( " create table sql = " + sql.toString() );
-
-        mSqLiteDatabase.execSQL( sql.toString() );
     }
 
     @Override

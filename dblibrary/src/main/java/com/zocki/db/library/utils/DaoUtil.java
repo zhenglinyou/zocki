@@ -1,6 +1,8 @@
-package com.zocki.db.library;
+package com.zocki.db.library.utils;
 
 import android.text.TextUtils;
+
+import com.zocki.db.library.annotation.Column;
 
 import java.util.Locale;
 

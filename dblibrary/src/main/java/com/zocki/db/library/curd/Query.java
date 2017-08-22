@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.db.library.DaoUtil;
+import com.zocki.db.library.utils.DaoUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

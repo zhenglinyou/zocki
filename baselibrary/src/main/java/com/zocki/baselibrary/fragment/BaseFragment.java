@@ -47,8 +47,6 @@ public abstract class BaseFragment extends Fragment {
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if( parent != null ) parent.removeView( rootView );
 
-        isInitView = false;
-
         isInitView = true;
 
         initTitle();
@@ -57,9 +55,9 @@ public abstract class BaseFragment extends Fragment {
 
         initLoadingView();
 
-        ViewUtils.inject(rootView);
-
         initView();
+
+        ViewUtils.inject(rootView);
 
         lazyLoadData();
 

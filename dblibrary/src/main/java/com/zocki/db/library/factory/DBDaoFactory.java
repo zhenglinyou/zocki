@@ -1,13 +1,9 @@
 package com.zocki.db.library.factory;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
-
-import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.db.library.IDBDao;
+import com.zocki.db.library.PserInitialize;
+import com.zocki.db.library.dao.IDBDao;
+import com.zocki.db.library.helper.DBOpenHelper;
 import com.zocki.db.library.impl.DBDaoImpl;
-
-import java.io.File;
 
 /**
  * Created by Administrator on 2017/7/30 0030.
@@ -15,26 +11,10 @@ import java.io.File;
 public class DBDaoFactory {
 
     private static DBDaoFactory instance;
-    private SQLiteDatabase mSqLiteDatabase;
+    private DBOpenHelper mDBOpenHelper;
 
     private DBDaoFactory() {
-        // 把数据库放在内存卡里面
-        File dbRoot = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-            + File.separator + "zocki" + File.separator + "database"
-        );
-
-        if( !dbRoot.exists() ) {
-            boolean b = dbRoot.mkdirs();
-        }
-
-        File dbFile = new File( dbRoot, "zocki.db");
-
-        // 打开或创建一个数据库
-        mSqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
-
-        LogUtils.e( mSqLiteDatabase.getVersion() );
-
-        mSqLiteDatabase.setVersion( 1 );
+        mDBOpenHelper = new DBOpenHelper(PserInitialize.getContext(),PserInitialize.dbName,PserInitialize.dbVersion);
     }
 
     public static DBDaoFactory getInstance() {
@@ -47,9 +27,8 @@ public class DBDaoFactory {
     }
 
     public <T> IDBDao<T> getDao(Class<T> clazz) {
-        IDBDao<T> daoSupport = new DBDaoImpl<T>();
-        daoSupport.init(mSqLiteDatabase,clazz);
+        IDBDao<T> daoSupport = new DBDaoImpl<>();
+        daoSupport.init(mDBOpenHelper.getWritableDatabase(),clazz);
         return daoSupport;
     }
-
 }

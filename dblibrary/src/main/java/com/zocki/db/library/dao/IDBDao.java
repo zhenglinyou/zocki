@@ -1,4 +1,4 @@
-package com.zocki.db.library;
+package com.zocki.db.library.dao;
 
 import android.database.sqlite.SQLiteDatabase;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface IDBDao<T> {
 
-    void init(SQLiteDatabase sqLiteDatabase, Class<T> clazz);
+    void  init(SQLiteDatabase sqLiteDatabase, Class<T> clazz);
 
     /**
      * 单条插入

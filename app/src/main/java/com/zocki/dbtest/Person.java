@@ -1,4 +1,4 @@
-package com.zocki;
+package com.zocki.dbtest;
 
 /**
  * Created by Administrator on 2017/7/30 0030.
@@ -8,9 +8,7 @@ public class Person {
 
     private String name;
     private int age;
-
     private boolean flag;
-
     private boolean uflag = true;
 
     public Person() {
