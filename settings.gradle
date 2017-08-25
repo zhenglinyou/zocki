@@ -1,1 +1,1 @@
-include ':app', ':baselibrary', ':framelibrary', ':dblibrary'
+include ':app', ':baselibrary', ':framelibrary', ':dblibrary', ':weightlibrary'

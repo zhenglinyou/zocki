@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="XTextView">
+        <attr name="Xtext" format="string"/>
+        <attr name="Xsize" format="integer|reference"/>
+        <attr name="Xcolor" format="color|integer"/>
+    </declare-styleable>
+
+</resources>

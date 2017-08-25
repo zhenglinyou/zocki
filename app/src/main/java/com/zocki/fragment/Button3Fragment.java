@@ -1,5 +1,9 @@
 package com.zocki.fragment;
 
+import android.view.View;
+
+import com.weightlibrary.loading.DefaultStatusView;
+import com.weightlibrary.loading.StatusView;
 import com.zocki.R;
 import com.zocki.baselibrary.fragment.BaseFragment;
 import com.zocki.baselibrary.logger.LogUtils;
@@ -22,5 +26,12 @@ public class Button3Fragment extends BaseFragment {
     @Override
     public void initData() {
 
+    }
+
+    @Override
+    protected View getLoadingView() {
+        StatusView statusView = DefaultStatusView.Builder(getContext()).create();
+        statusView.setLoadingMsg("2222222222222");
+        return statusView.getLayout();
     }
 }

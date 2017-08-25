@@ -3,7 +3,10 @@ package com.zocki.fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import com.weightlibrary.loading.DefaultStatusView;
+import com.weightlibrary.loading.StatusView;
 import com.zocki.R;
 import com.zocki.baselibrary.fragment.BaseFragment;
 import com.zocki.baselibrary.logger.LogUtils;
@@ -25,7 +28,6 @@ public class Button2Fragment extends BaseFragment {
 
     @Override
     public void initData() {
-
     }
 
     @Override
@@ -34,7 +36,16 @@ public class Button2Fragment extends BaseFragment {
     }
 
     @Override
-    protected int getLoadingResId() {
-        return R.layout.loading_layout;
+    protected View getLoadingView() {
+        StatusView statusView = DefaultStatusView.Builder(getContext())
+                .setErrorOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LogUtils.e("2222222222222222");
+                    }
+                })
+                .create();
+        statusView.showError();
+        return statusView.getLayout();
     }
 }

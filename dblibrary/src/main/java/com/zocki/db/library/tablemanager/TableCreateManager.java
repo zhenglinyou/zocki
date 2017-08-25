@@ -5,15 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.db.library.annotation.Column;
+import com.zocki.db.library.annotation.attr.ColumnAttr;
 import com.zocki.db.library.utils.DaoUtil;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import static android.R.attr.name;
 
 /**
  * Created by kaisheng3 on 2017/8/22.
@@ -34,41 +32,17 @@ public class TableCreateManager {
         // 反射 获取变量名称
         for (Field field : mClazz.getDeclaredFields()) {
 
-            if( field.isSynthetic() ) continue;
-            field.setAccessible(true);
+            ColumnAttr columnAttr = DaoUtil.getColumnAttr(field);
+            if( columnAttr == null ) continue;
 
-            String _columnName = field.getName();
-            boolean _notNull = false;
-            boolean _unique = false;
-            String _defaultValue = null;
-
-            // 热修复或者其它的关键字
-            if( filterName(_columnName) ) continue;
-
-            // type 需要进行转换 int --> integer String --> text
-            String type = field.getType().getSimpleName();
-
-            Column columnAnotation = field.getAnnotation(Column.class);
-
-            if( columnAnotation != null ) {
-                if( !TextUtils.isEmpty(columnAnotation.columnName()) ) {
-                    _columnName = columnAnotation.columnName();
-                }
-                _notNull = columnAnotation.notNull();
-                _unique = columnAnotation.unique();
-                _defaultValue = columnAnotation.defaultValue();
-            }
-
-            sql.append( _columnName ).append(" ").append(DaoUtil.getColumnType(type));
-            if( _notNull ) sql.append(" NOT NULL");
-            if( _unique ) sql.append(" UNIQUE");
-            if( !TextUtils.isEmpty(_defaultValue) ) sql.append( String.valueOf(" default " + _defaultValue) );
+            sql.append( columnAttr.getColumnName() ).append(" ").append( columnAttr.getColumnType() );
+            if( columnAttr.isNotNull() ) sql.append(" NOT NULL");
+            if( columnAttr.isUnique() ) sql.append(" UNIQUE");
+            if( !TextUtils.isEmpty( columnAttr.getDefaultValue() ) ) sql.append(" default ").append(columnAttr.getDefaultValue());
             sql.append(", ");
         }
 
         sql.replace(sql.length() - 2, sql.length(),")");
-
-        LogUtils.e( sql.toString() );
 
         return sql.toString();
     }
@@ -149,7 +123,7 @@ public class TableCreateManager {
         db.execSQL(createTempSql);
     }
 
-    private static boolean filterName(String name) {
+    public static boolean filterName(String name) {
         return name.equals("serialVersionUID");
     }
 }

@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 
 import com.zocki.baselibrary.R;
 import com.zocki.baselibrary.ioc.ViewUtils;
-import com.zocki.baselibrary.view.FindViewById;
+import com.zocki.baselibrary.viewheper.FindViewById;
 
 /**
  * Created by kaisheng3 on 2017/7/20.

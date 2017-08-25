@@ -1,7 +1,6 @@
 package com.zocki.baselibrary.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import android.widget.FrameLayout;
 
 import com.zocki.baselibrary.R;
 import com.zocki.baselibrary.ioc.ViewUtils;
-import com.zocki.baselibrary.view.FindViewById;
+import com.zocki.baselibrary.viewheper.FindViewById;
 
 /**
  * Created by kaisheng3 on 2017/8/16.
@@ -127,8 +126,9 @@ public abstract class BaseFragment extends Fragment {
         }
 
         FrameLayout loadingFramelayout = (FrameLayout) mLoadingViewStub.inflate();
-        View loadingView = getLoadingView(loadingFramelayout);
+        View loadingView = getLoadingView();
         if( loadingView != null ) {
+            loadingFramelayout.addView(loadingView);
             loadingFramelayout.setVisibility(View.VISIBLE);
             return;
         }
@@ -150,7 +150,7 @@ public abstract class BaseFragment extends Fragment {
         return 0;
     }
 
-    protected View getLoadingView(ViewGroup parent){
+    protected View getLoadingView(){
         return null;
     }
 

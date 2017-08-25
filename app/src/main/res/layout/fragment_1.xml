@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -10,6 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="创建数据库Person表"/>
+
+    <com.zocki.weight.XTextView
+        android:layout_marginTop="20dip"
+        android:background="#6600ff00"
+        app:Xtext="@string/app_name"
+        app:Xcolor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
 </LinearLayout>

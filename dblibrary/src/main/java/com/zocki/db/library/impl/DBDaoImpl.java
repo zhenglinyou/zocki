@@ -2,7 +2,9 @@ package com.zocki.db.library.impl;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
+import com.zocki.db.library.annotation.attr.ColumnAttr;
 import com.zocki.db.library.utils.DaoUtil;
 import com.zocki.db.library.dao.IDBDao;
 import com.zocki.db.library.curd.Query;
@@ -13,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.R.attr.key;
+import static android.R.attr.value;
+
 public class DBDaoImpl<T> implements IDBDao<T> {
 
     private SQLiteDatabase mSqLiteDatabase;
@@ -20,10 +25,6 @@ public class DBDaoImpl<T> implements IDBDao<T> {
     private final Object[] mPutMethondAttrs = new Object[2];
     private final Map<String,Method> mPutMethods = new HashMap<>();
     private Query<T> mQuerySupport;
-
-    private boolean filterName( String name ) {
-       return name.equals("serialVersionUID");
-    }
 
     public void init(SQLiteDatabase sqLiteDatabase, Class<T> clazz) {
         this.mSqLiteDatabase = sqLiteDatabase;
@@ -40,12 +41,9 @@ public class DBDaoImpl<T> implements IDBDao<T> {
     public void insert(List<T> datas) {
         if( datas == null ) return ;
         try {
-            // 批量插入，采用事务方式
             mSqLiteDatabase.beginTransaction();
 
-            for (T data : datas) {
-                insert( data );
-            }
+            for (T data : datas) { insert( data ); }
 
             mSqLiteDatabase.setTransactionSuccessful();
         } catch (Exception e) {
@@ -85,26 +83,32 @@ public class DBDaoImpl<T> implements IDBDao<T> {
 
         ContentValues values = new ContentValues();
         for (Field field : obj.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
             try {
 
-                if( field.isSynthetic() ) continue;
-
-                String key = field.getName();
-                if( filterName(key) ) continue;
+                ColumnAttr columnAttr = DaoUtil.getColumnAttr(field);
+                if( columnAttr == null ) continue;
 
                 Object value = field.get( obj );
 
-                mPutMethondAttrs[0] = key;
+                mPutMethondAttrs[0] = columnAttr.getColumnName();
                 mPutMethondAttrs[1] = value;
 
-                String fieldNameType = field.getType().getName();
+                if( value == null && !TextUtils.isEmpty(columnAttr.getDefaultValue()) ) {
+                    mPutMethondAttrs[1] = columnAttr.getDefaultValue();
+                } else if( value == null ){
+                    continue;
+                }
 
+                String fieldNameType = field.getType().getName();
                 Method putMethod = mPutMethods.get(fieldNameType);
-                if( putMethod == null ) {
+                if( putMethod == null && value != null ) {
                     // 插入方法
                     putMethod = ContentValues.class.getDeclaredMethod("put", String.class, value.getClass());
                     mPutMethods.put(fieldNameType,putMethod);
+                }
+
+                if( putMethod == null ) {
+                    continue;
                 }
 
                 // putMethod.invoke(values, key, value);

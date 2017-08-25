@@ -1,19 +1,36 @@
 package com.zocki.dbtest;
 
 import com.zocki.db.library.annotation.Column;
+import com.zocki.db.library.annotation.Extend;
+import com.zocki.db.library.annotation.TableName;
 
 /**
  * Created by kaisheng3 on 2017/8/21.
  */
-
+@TableName( name = "Person333")
 public class Person2 {
+
+    @Column(defaultValue = "10", columnName = "ccc1")
+    private int ccc;
+
+    @Column(defaultValue = "123123")
+    private String kekk;
+
+    @Extend
+    private int ddd;
+
+    private int bbb;
 
     @Column(notNull = true)
     private int aaa;
-    // CREATE TABLE IF NOT EXISTS Person2(ID INTEGER PRIMARY KEY AUTOINCREMENT, aaa integer NOT NULL, bbb integer, Pser integer default 10, ttt integer)
-    @Column(defaultValue = "10")
-    private int ccc;
-    private int bbb;
+
+    public int getDdd() {
+        return ddd;
+    }
+
+    public void setDdd(int ddd) {
+        this.ddd = ddd;
+    }
 
     public int getBbb() {
         return bbb;
