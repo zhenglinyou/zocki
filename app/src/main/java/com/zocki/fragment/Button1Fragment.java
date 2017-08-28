@@ -1,11 +1,17 @@
 package com.zocki.fragment;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.weightlibrary.loading.DefaultStatusView;
+import com.weightlibrary.loading.DefaultStatusBar;
 import com.weightlibrary.loading.StatusView;
+import com.weightlibrary.title.CustomTitleBar;
+import com.weightlibrary.title.CustomTitleView;
+import com.weightlibrary.title.DefTitleView;
+import com.weightlibrary.title.DefaultTitleBar;
 import com.zocki.R;
+import com.zocki.TestActivity;
 import com.zocki.baselibrary.fragment.BaseFragment;
 import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.db.library.dao.IDBDao;
@@ -42,6 +48,8 @@ public class Button1Fragment extends BaseFragment implements View.OnClickListene
                 long insert = dao.insert(person2);
 
                 Toast.makeText(getContext(),"创建表" + insert,Toast.LENGTH_SHORT).show();
+
+                TestActivity.startActivity(getContext(),TestActivity.class);
                 break;
         }
     }
@@ -51,15 +59,35 @@ public class Button1Fragment extends BaseFragment implements View.OnClickListene
     }
 
     @Override
+    protected View getTitleView() {
+        /*DefTitleView defTitleView = DefaultTitleBar.Builder(getContext()).setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtils.e( "333333333333333" );
+            }
+        }).setRightOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        }).create();
+
+        return defTitleView.getLayout();*/
+
+        CustomTitleView customTitleView = CustomTitleBar.Builder(getContext(), R.layout.default_view_title_layout).create();
+
+        return customTitleView.getLayout();
+    }
+
+    @Override
     protected View getLoadingView() {
-        statusView = DefaultStatusView.Builder(getContext())
+        statusView = DefaultStatusBar.Builder(getContext())
                 .setEmptyOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         LogUtils.e( "111111111111111111111" );
                     }
-                })
-                .create();
+                }).create();
         statusView.showEmpty();
         return statusView.getLayout();
     }

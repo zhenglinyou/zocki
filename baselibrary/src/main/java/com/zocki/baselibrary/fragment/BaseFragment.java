@@ -109,9 +109,10 @@ public abstract class BaseFragment extends Fragment {
 
     private void initTitle() {
         FrameLayout mFramelayout = getView(R.id.framelayout_title);
-        View titleView = getTitleView(mFramelayout);
+        View titleView = getTitleView();
         if( titleView != null ) {
             mFramelayout.setVisibility(View.VISIBLE);
+            mFramelayout.addView(titleView);
         }
     }
 
@@ -142,7 +143,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // 初始化头部
-    protected View getTitleView(ViewGroup parent) {
+    protected View getTitleView() {
         return null;
     }
 

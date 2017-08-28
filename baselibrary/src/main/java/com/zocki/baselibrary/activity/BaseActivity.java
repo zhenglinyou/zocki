@@ -2,14 +2,17 @@ package com.zocki.baselibrary.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.jaeger.library.StatusBarUtil;
 import com.zocki.baselibrary.R;
 import com.zocki.baselibrary.ioc.ViewUtils;
 import com.zocki.baselibrary.viewheper.FindViewById;
@@ -25,6 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if( bundle != null && bundle.length > 0 ) {
             intent.putExtra("bundle", bundle[0]);
         }
+        context.startActivity(intent);
     }
 
     private FindViewById mFindViewById;
@@ -39,9 +43,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         mFindViewById = new FindViewById(this);
 
+        // 取消状态栏
+        // getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         initTitle();
 
         initContentView();
+
+        // StatusBarUtil.setColor(this, Color.parseColor("#FFFFFF"));
 
         initLoadingView();
 

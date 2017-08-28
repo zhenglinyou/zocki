@@ -41,7 +41,7 @@ public class StatusView {
 
     private View[] mStatusLayouts = new View[3];
 
-    StatusView(Context context) {
+    public StatusView(Context context) {
         // this.context = context;
         if( context == null ) {
             throw new NullPointerException("StatusView context is null");

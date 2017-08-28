@@ -1,12 +1,12 @@
 package com.zocki.fragment;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.weightlibrary.loading.DefaultStatusView;
+import com.weightlibrary.loading.DefaultStatusBar;
 import com.weightlibrary.loading.StatusView;
+import com.weightlibrary.title.DefTitleView;
+import com.weightlibrary.title.DefaultTitleBar;
 import com.zocki.R;
 import com.zocki.baselibrary.fragment.BaseFragment;
 import com.zocki.baselibrary.logger.LogUtils;
@@ -31,13 +31,22 @@ public class Button2Fragment extends BaseFragment {
     }
 
     @Override
-    protected View getTitleView(ViewGroup parent) {
-        return LayoutInflater.from(getContext()).inflate(R.layout.common_title,parent);
+    protected View getTitleView() {
+
+        DefTitleView defTitleView = DefaultTitleBar.Builder(getContext()).setLeftOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "123123", Toast.LENGTH_SHORT).show();
+            }
+        }).create();
+
+        return defTitleView.getLayout();
     }
 
     @Override
     protected View getLoadingView() {
-        StatusView statusView = DefaultStatusView.Builder(getContext())
+        StatusView statusView = DefaultStatusBar
+                .Builder(getContext())
                 .setErrorOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

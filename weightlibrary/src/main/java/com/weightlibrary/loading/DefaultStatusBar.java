@@ -9,7 +9,7 @@ import android.view.View;
  * Created by kaisheng3 on 2017/8/25.
  *
  */
-public class DefaultStatusView {
+public class DefaultStatusBar {
 
     public static Builder Builder(Context context) {
         return new Builder(context);
