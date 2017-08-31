@@ -71,7 +71,6 @@ public class Button1Fragment extends BaseFragment implements View.OnClickListene
 
             }
         }).create();
-
         return defTitleView.getLayout();*/
 
         CustomTitleView customTitleView = CustomTitleBar.Builder(getContext(), R.layout.default_view_title_layout).create();

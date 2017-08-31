@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.zocki.baselibrary.fragment.BaseFragment;
 import com.zocki.baselibrary.ioc.ViewId;
+import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.fragment.Button1Fragment;
 import com.zocki.fragment.Button2Fragment;
 import com.zocki.fragment.Button3Fragment;
@@ -72,6 +73,11 @@ public class MainActivity extends BaseSkinActivity{
 
     @Override
     protected void initData() {
+
+        View view = getView(R.id.container_id);
+
+        LogUtils.e( view == null );
+
         // 启动服务
         /*startService(new Intent(this, MessageService.class));
 
