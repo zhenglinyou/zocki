@@ -11,6 +11,7 @@ import com.zocki.db.library.tablemanager.TabModel;
 import com.zocki.dbtest.Person;
 import com.zocki.dbtest.Person2;
 import com.zocki.framelibrary.FrameLibraryInit;
+import com.zocki.framelibrary.http.cache.CacheData;
 import com.zocki.framelibrary.skin.SkinManager;
 
 import java.io.File;
@@ -45,6 +46,7 @@ public class ZockiApplication extends Application {
         ArrayList<TabModel> tabModels = new ArrayList<>();
         tabModels.add(new TabModel(Person.class));
         tabModels.add(new TabModel(Person2.class));
+        tabModels.add(new TabModel(CacheData.class));
 
         PserInitialize.addTableModels(tabModels);
 

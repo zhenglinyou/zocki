@@ -8,16 +8,13 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-/**
- * Created by kaisheng3 on 2017/7/28.
- * 统一请求网络
- */
+
 public class HttpUtils {
 
-    private static IHttpEngine mHttpEngine = null;
+    private static IHttpConnector mHttpConnector = null;
 
-    public static void setDefalutHttpEngine(IHttpEngine httpEngine) {
-        HttpUtils.mHttpEngine = httpEngine;
+    public static void setDefalutHttpConnector(IHttpConnector h) {
+        HttpUtils.mHttpConnector = h;
     }
 
     public static Handler handler;
@@ -30,21 +27,10 @@ public class HttpUtils {
         GET, POST
     }
 
-    /**
-     * 请求连接
-     */
     private String mUrl;
-    /**
-     * 请求方法
-     */
     private MethodType mMethodType = MethodType.GET;
-    /**
-     * 参数
-     */
     private Map<String,Object> mParams;
-
     private boolean mCache;
-
     private Context mContext;
 
     private HttpUtils(Context context) {
@@ -56,20 +42,11 @@ public class HttpUtils {
         return new HttpUtils(context);
     }
 
-    /**
-     * 设置URL
-     * @param url
-     * @return
-     */
     public HttpUtils url( String url ) {
         mUrl = url;
         return this;
     }
 
-    /**
-     * 请求方式
-     * @return
-     */
     public HttpUtils post() {
         mMethodType = MethodType.POST;
         return this;
@@ -95,9 +72,9 @@ public class HttpUtils {
         return this;
     }
 
-    public void execute(EngineCallBack callBack) {
+    public void execute(IHttpCallBack callBack) {
         if( callBack == null ) {
-            callBack = EngineCallBack.DEFUALT_CALL_BACK;
+            callBack = IHttpCallBack.DEFUALT_CALL_BACK;
         }
 
         if( mMethodType == MethodType.GET ) {
@@ -107,41 +84,35 @@ public class HttpUtils {
         }
     }
 
-    /**
-     * 初始化引擎
-     * @param httpEngine
-     */
-    public static void init(IHttpEngine httpEngine) {
-        mHttpEngine = httpEngine;
+    public static void init(IHttpConnector httpEngine) {
+        mHttpConnector = httpEngine;
     }
 
     public static String joinParams( String url, Map<String,Object> parmas) {
-        StringBuffer buffer = new StringBuffer(url).append("?");
+        StringBuilder buffer = new StringBuilder(url);
         int paramCount = parmas == null ? 0 : parmas.size();
-        for( String key : parmas.keySet() )
-        {
-            buffer.append(key).append("=").append(parmas.get(key).toString());
-            paramCount --;
-            if( paramCount > 0 ) buffer.append("&");
+        if( paramCount > 0 ) {
+            buffer.append("?");
+            for (String key : parmas.keySet()) {
+                buffer.append(key).append("=").append(parmas.get(key).toString());
+                paramCount--;
+                if (paramCount > 0) buffer.append("&");
+            }
         }
         return buffer.toString();
     }
 
-    /**
-     * 请求时自带引擎
-     * @param httpEngine
-     */
-    public HttpUtils exchangeEngine(IHttpEngine httpEngine) {
-        mHttpEngine = httpEngine;
+    public HttpUtils exchangeEngine(IHttpConnector httpEngine) {
+        mHttpConnector = httpEngine;
         return this;
     }
 
-    private void get(boolean cache, String url, Map<String, Object> params, EngineCallBack callBack) {
-        mHttpEngine.get(cache,mContext,url, params, callBack);
+    private void get(boolean cache, String url, Map<String, Object> params, IHttpCallBack callBack) {
+        mHttpConnector.get(cache,mContext,url, params, callBack);
     }
 
-    private void post(boolean cache,String url, Map<String, Object> params, EngineCallBack callBack) {
-        mHttpEngine.post(cache,mContext,url, params, callBack);
+    private void post(boolean cache,String url, Map<String, Object> params, IHttpCallBack callBack) {
+        mHttpConnector.post(cache,mContext,url, params, callBack);
     }
 
     public static Class<?> analysisClazzInfo( Object object ) {

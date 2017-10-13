@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import com.zocki.baselibrary.R;
 import com.zocki.baselibrary.ioc.ViewUtils;
+import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.baselibrary.viewheper.FindViewById;
 
 /**
@@ -48,6 +49,14 @@ public abstract class BaseFragment extends Fragment {
 
         isInitView = true;
 
+        LogUtils.e( getClass().getSimpleName() + " --- " + "createView" );
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         initTitle();
 
         initContentView();
@@ -59,8 +68,6 @@ public abstract class BaseFragment extends Fragment {
         ViewUtils.inject(rootView);
 
         lazyLoadData();
-
-        return rootView;
     }
 
     @Override

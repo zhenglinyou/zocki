@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.zocki.baselibrary.AppConfig;
-import com.zocki.baselibrary.http.EngineCallBack;
 import com.zocki.baselibrary.http.HttpUtils;
+import com.zocki.baselibrary.http.IHttpCallBack;
 import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.db.library.dao.IDBDao;
 import com.zocki.db.library.factory.DBDaoFactory;
@@ -16,11 +16,7 @@ import com.zocki.framelibrary.http.cache.CacheData;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by kaisheng3 on 2017/7/28.
- * 回调扩展
- */
-public abstract class HttpCallBack<T extends BaseEntity> implements EngineCallBack {
+public abstract class HttpCallBack<T extends BaseEntity> implements IHttpCallBack {
 
     private String preCacheData;
 
@@ -32,6 +28,7 @@ public abstract class HttpCallBack<T extends BaseEntity> implements EngineCallBa
         onPreExcute();
 
         if(cache) {
+            LogUtils.e( "key = " + url );
             // 可以去线程调度
             IDBDao<CacheData> daoSupport = DBDaoFactory.getInstance().getDao(CacheData.class);
             List<CacheData> cacheDatas = daoSupport.query()
@@ -99,19 +96,4 @@ public abstract class HttpCallBack<T extends BaseEntity> implements EngineCallBa
     }
 
     public abstract void onSuccess(T result) ;
-
-    public final EngineCallBack DEFUALT_CALL_BACK = new EngineCallBack() {
-
-        @Override
-        public void onPreExcute(boolean isNewData, String url, Context context, Map<String, Object> params) {
-        }
-
-        @Override
-        public void onError(Exception e) {
-        }
-
-        @Override
-        public void onSuccess( boolean cache,boolean isNewData, String url, String result) {
-        }
-    };
 }

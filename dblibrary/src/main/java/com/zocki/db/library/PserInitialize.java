@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.zocki.db.library.config.GlobalException;
 import com.zocki.db.library.tablemanager.TabModel;
+import com.zocki.db.library.tablemanager.TableCreateManager;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.zocki.baselibrary.AppConfig;
-import com.zocki.baselibrary.http.EngineCallBack;
+import com.zocki.baselibrary.http.IHttpCallBack;
 import com.zocki.baselibrary.http.HttpUtils;
-import com.zocki.baselibrary.http.IHttpEngine;
+import com.zocki.baselibrary.http.IHttpConnector;
 import com.zocki.baselibrary.logger.LogUtils;
 
 import java.io.File;
@@ -26,11 +26,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-/**
- * Created by kaisheng3 on 2017/7/28.
- * OK http 默认请求
- */
-public class OkHttpEngine implements IHttpEngine {
+public class OkHttpEngine implements IHttpConnector {
 
     private static OkHttpClient mOkHttpClient;
 
@@ -39,11 +35,11 @@ public class OkHttpEngine implements IHttpEngine {
     }
 
     @Override
-    public void get(final boolean cache, Context context, String url, Map<String, Object> params, @NonNull final EngineCallBack httpCallBack) {
+    public void get(final boolean cache, Context context, String url, Map<String, Object> params, @NonNull final IHttpCallBack httpCallBack) {
 
         final String mKeyUrl = HttpUtils.joinParams(url,params);
 
-        if(AppConfig.ADB) LogUtils.e( "get 请求链接 : " + mKeyUrl);
+        if( AppConfig.ADB ) LogUtils.e( "get 请求链接 : " + mKeyUrl);
 
         httpCallBack.onPreExcute(cache, mKeyUrl, context, params);
 
@@ -52,15 +48,16 @@ public class OkHttpEngine implements IHttpEngine {
 
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 httpCallBack.onError(e);
             }
 
             @Override
-            public void onResponse(Call call, @NonNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 ResponseBody body = response.body();
+                //LogUtils.e( body.string() );
                 if( body != null ) {
-                    final String resultJson = body.string();
+                    String resultJson = body.string();
                     httpCallBack.onSuccess(cache, true, mKeyUrl, resultJson);
                 } else {
                     httpCallBack.onError(new NullPointerException( mKeyUrl + " respose body() is null"));
@@ -70,7 +67,7 @@ public class OkHttpEngine implements IHttpEngine {
     }
 
     @Override
-    public void post(final boolean cache, Context context, final String url, Map<String, Object> params, final EngineCallBack httpCallBack) {
+    public void post(final boolean cache, Context context, final String url, Map<String, Object> params, final IHttpCallBack httpCallBack) {
 
         final String mKeyUrl = HttpUtils.joinParams(url,params);
 
@@ -88,12 +85,12 @@ public class OkHttpEngine implements IHttpEngine {
         mOkHttpClient.newCall(request).enqueue(
                 new Callback() {
                     @Override
-                    public void onFailure(Call call, final IOException e) {
+                    public void onFailure(@NonNull Call call, @NonNull final IOException e) {
                         executeError(httpCallBack, e);
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         ResponseBody body = response.body();
                         if (body != null) {
                             String resultJson = body.string();
@@ -148,7 +145,7 @@ public class OkHttpEngine implements IHttpEngine {
     /**
      *  执行成功的方法
      **/
-    private void executeSuccessMethod(boolean cache,final EngineCallBack httpCallBack, String url, final String resultJson) {
+    private void executeSuccessMethod(boolean cache, final IHttpCallBack httpCallBack, String url, final String resultJson) {
         try {
             httpCallBack.onSuccess(cache, true, url, resultJson);
         } catch (Exception e) {
@@ -160,7 +157,7 @@ public class OkHttpEngine implements IHttpEngine {
     /**
      *  执行失败的方法
      */
-    private void executeError(final EngineCallBack httpCallBack, final Exception e) {
+    private void executeError(final IHttpCallBack httpCallBack, final Exception e) {
         HttpUtils.handler.post(new Runnable() {
             @Override
             public void run() {

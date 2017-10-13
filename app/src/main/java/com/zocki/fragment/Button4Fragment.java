@@ -16,7 +16,7 @@ public class Button4Fragment extends BaseFragment {
 
     @Override
     public void initView() {
-        LogUtils.e(getClass().getName());
+        LogUtils.e( "4444444444444444444444444444" );
     }
 
     @Override

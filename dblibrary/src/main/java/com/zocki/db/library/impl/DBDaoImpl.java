@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.zocki.db.library.annotation.attr.ColumnAttr;
+import com.zocki.db.library.tablemanager.TableCreateManager;
 import com.zocki.db.library.utils.DaoUtil;
 import com.zocki.db.library.dao.IDBDao;
 import com.zocki.db.library.curd.Query;
@@ -14,9 +15,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static android.R.attr.key;
-import static android.R.attr.value;
 
 public class DBDaoImpl<T> implements IDBDao<T> {
 
@@ -29,6 +27,8 @@ public class DBDaoImpl<T> implements IDBDao<T> {
     public void init(SQLiteDatabase sqLiteDatabase, Class<T> clazz) {
         this.mSqLiteDatabase = sqLiteDatabase;
         this.mClazz = clazz;
+        // 可能后期加入表
+        TableCreateManager.createTable(sqLiteDatabase,clazz);
     }
 
     @Override

@@ -47,7 +47,6 @@ public abstract class BaseSkinActivity extends BaseActivity
 
         try {
             // A factory has already been set on this LayoutInflater 异常
-
             LayoutInflater layoutInflater = LayoutInflater.from(this);
 
             Field mFactorySet = LayoutInflater.class.getDeclaredField("mFactorySet");

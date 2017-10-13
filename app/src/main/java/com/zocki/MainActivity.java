@@ -1,24 +1,34 @@
 package com.zocki;
 
+import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.animation.Interpolator;
 
+import com.bm.library.PhotoView;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.zocki.baselibrary.fragment.BaseFragment;
+import com.zocki.baselibrary.http.HttpUtils;
 import com.zocki.baselibrary.ioc.ViewId;
 import com.zocki.baselibrary.logger.LogUtils;
+import com.zocki.baselibrary.utils.Preconditions;
+import com.zocki.entity.RecoverEntity;
 import com.zocki.fragment.Button1Fragment;
 import com.zocki.fragment.Button2Fragment;
 import com.zocki.fragment.Button3Fragment;
 import com.zocki.fragment.Button4Fragment;
 import com.zocki.framelibrary.BaseSkinActivity;
+import com.zocki.framelibrary.http.HttpCallBack;
 import com.zocki.mainbutton.MainButton;
 
-public class MainActivity extends BaseSkinActivity{
+import static android.R.attr.factor;
+import static android.R.attr.x;
 
-    @ViewId(R.id.viewpager)
-    private ViewPager mMainViewpager;
+public class MainActivity extends BaseSkinActivity{
 
     @ViewId(R.id.main_button)
     private MainButton mMainButton;
@@ -35,7 +45,10 @@ public class MainActivity extends BaseSkinActivity{
 
     @Override
     protected void initView() {
-        mMainViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+
+        QMUIStatusBarHelper.translucent(this, Color.parseColor("#00ff00"));
+
+       /* mMainViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
@@ -51,14 +64,44 @@ public class MainActivity extends BaseSkinActivity{
             public int getCount() {
                 return 4;
             }
-        });
+        });*/
 
         mMainButton.setOnItemClickListener(new MainButton.OnItemClickListener() {
             @Override
             public void itemClick(int position) {
-                mMainViewpager.setCurrentItem(position);
+               // mMainViewpager.setCurrentItem(position);
+                Fragment fragment = null;
+                switch (position) {
+                    case 0: fragment = button1Fragment; break;
+                    case 1: fragment = button2Fragment; break;
+                    case 2: fragment = button3Fragment; break;
+                    case 3: fragment = button4Fragment; break;
+                }
+
+                changeFragment(fragment);
             }
         });
+
+        changeFragment(button1Fragment);
+
+        /*getSupportFragmentManager().beginTransaction().add(R.id.framelayout_content,button1Fragment)
+                .add(R.id.framelayout_content,button2Fragment)
+                .add(R.id.framelayout_content,button3Fragment)
+                .add(R.id.framelayout_content,button4Fragment).commit();*/
+    }
+
+    private void changeFragment(Fragment fragment) {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction().hide(button1Fragment).hide(button2Fragment).hide(button3Fragment).hide(button4Fragment);
+
+        if( !fragment.isAdded() ) {
+            ft.add(R.id.framelayout_content,fragment);
+        }
+
+        ft.show(fragment);
+
+        ft.commit();
+
     }
 
    /* @Override
@@ -74,9 +117,31 @@ public class MainActivity extends BaseSkinActivity{
     @Override
     protected void initData() {
 
+        HttpUtils.with(this).url("https://test.521meme.com/proxy/other/recommendList")
+                .addParam("pageNum", 1)
+                .addParam("pageSize", 100)
+                .cache(true)
+                .execute(new HttpCallBack<RecoverEntity>() {
+                    @Override
+                    public void onSuccess(RecoverEntity result) {
+                        LogUtils.e( result.isNewData + " -- " + result );
+                    }
+                    @Override
+                    public void onError(Exception e) {
+                    }
+                });
+
         View view = getView(R.id.container_id);
 
-        LogUtils.e( view == null );
+        ValueAnimator animator = ValueAnimator.ofFloat( 0.5f, 1.2f );
+        animator.setInterpolator(new Interpolator() {
+            @Override
+            public float getInterpolation(float input) {
+                float factor = 0.4f;
+                float value = (float) (Math.pow(2, -10 * input) * Math.sin((factor - factor / 4) * (2 * Math.PI) / factor) + 1);
+                return value;
+            }
+        });
 
         // 启动服务
         /*startService(new Intent(this, MessageService.class));
@@ -122,7 +187,7 @@ public class MainActivity extends BaseSkinActivity{
                     .addParam("pageNum", 1)
                     .addParam("pageSize", 100)
                     .cache(true)
-                    .execute(new HttpCallBack<RecoverEntity>() {
+                    .execute(new IHttpCallBack<RecoverEntity>() {
                         @Override
                         public void onSuccess(RecoverEntity result) {
                             LogUtils.e( result.isNewData + " -- " + result );

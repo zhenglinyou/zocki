@@ -105,7 +105,7 @@ public class Query<T> {
     }
 
     public List<T> query() {
-        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), mColumns, mSelection, mSelectionArgs, mGroupBy, mHaving, mOrderBy,mLimit);
+        Cursor cursor = mSqLiteDatabase.query(DaoUtil.getTableName(mClazz), mColumns, mSelection, mSelectionArgs, mGroupBy, mHaving, mOrderBy, mLimit);
         return cursorToList(cursor);
     }
 

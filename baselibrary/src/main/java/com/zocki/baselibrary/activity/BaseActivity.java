@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.jaeger.library.StatusBarUtil;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zocki.baselibrary.R;
 import com.zocki.baselibrary.ioc.ViewUtils;
 import com.zocki.baselibrary.viewheper.FindViewById;
@@ -21,7 +22,7 @@ import com.zocki.baselibrary.viewheper.FindViewById;
  * Created by kaisheng3 on 2017/7/20.
  * BaseActivity
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity {
 
     public static void startActivity(Context context, Class clazz, Bundle... bundle) {
         Intent intent = new Intent(context,clazz);

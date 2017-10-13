@@ -1,20 +1,26 @@
 package com.zocki;
 
-import com.zocki.baselibrary.activity.BaseActivity;
+import android.graphics.Color;
 
-/**
- * Created by kaisheng3 on 2017/8/28.
- */
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
+import com.zocki.baselibrary.activity.BaseActivity;
+import com.zocki.baselibrary.logger.LogUtils;
 
 public class TestActivity extends BaseActivity {
+
     @Override
     protected int getContentResId() {
-        return R.layout.activity_main;
+        return R.layout.test_activity;
     }
 
     @Override
     protected void initView() {
 
+        QMUIStatusBarHelper.translucent(this, Color.parseColor("#FFFFFF"));
+
+        QMUIStatusBarHelper.setStatusBarLightMode(this);
+
+        LogUtils.e("123123");
     }
 
     @Override

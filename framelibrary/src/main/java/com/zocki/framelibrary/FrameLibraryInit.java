@@ -12,7 +12,7 @@ import com.zocki.framelibrary.http.OkHttpEngine;
 public class FrameLibraryInit {
 
     public static void setHttpEngine(Context context) {
-        HttpUtils.setDefalutHttpEngine( new OkHttpEngine() );
+        HttpUtils.setDefalutHttpConnector( new OkHttpEngine() );
     }
 
 }

@@ -44,78 +44,66 @@ public class LogUtils {
     }
 
     public static void d(Object msg) {
-        if (mDebuggable >= LEVEL_DEBUG && ADB) {
-            StackTraceElement element = getTargetStackTraceElement();
-            if( element != null ) Log.d(mTag, element.toString() );
-            Log.d(mTag, ObjectsToString(msg));
-        }
+        d(mTag, msg);
     }
 
     public static void d(String tag, Object msg) {
         if (mDebuggable >= LEVEL_DEBUG && ADB) {
+            Log.d(mTag,"\n╔═════════════════════════════ start ══════════════════════════════════════════════════");
+
             StackTraceElement element = getTargetStackTraceElement();
             if( element != null ) Log.d(mTag, element.toString() );
             Log.d( tag, ObjectsToString( msg ) ) ;
+
+            Log.d(tag,"\n╚═════════════════════════════ end ═══════════════════════════════════════════════════\n\n");
+
         }
     }
 
     public static void i(String msg) {
-        if (mDebuggable >= LEVEL_INFO && ADB) {
-            StackTraceElement element = getTargetStackTraceElement();
-            if( element != null ) Log.i(mTag, element.toString() );
-            Log.i(mTag, msg);
-        }
+        i(mTag,msg);
     }
 
     public static void i(String tag, Object... msg) {
         if (mDebuggable >= LEVEL_INFO && ADB) {
+            Log.i(mTag,"\n╔═════════════════════════════ start ══════════════════════════════════════════════════");
+
             StackTraceElement element = getTargetStackTraceElement();
             if( element != null ) Log.i(mTag, element.toString() );
             Log.i(tag, ObjectsToString( msg) );
+
+            Log.i(tag,"\n╚═════════════════════════════ end ═══════════════════════════════════════════════════\n\n");
         }
     }
 
     public static void w(Object msg) {
-        if (mDebuggable >= LEVEL_WARN && ADB) {
-            StackTraceElement element = getTargetStackTraceElement();
-            if( element != null ) Log.w(mTag, element.toString() );
-            Log.w(mTag, ObjectsToString( msg ) );
-        }
+        w(mTag,msg);
     }
 
     public static void w(String tag, Object... msg) {
         if (mDebuggable >= LEVEL_WARN && ADB) {
+            Log.w(mTag,"\n╔═════════════════════════════ start ══════════════════════════════════════════════════");
+
             StackTraceElement element = getTargetStackTraceElement();
             if( element != null ) Log.w(mTag, element.toString() );
             Log.w(tag, ObjectsToString(msg));
+
+            Log.w(tag,"\n╚═════════════════════════════ end ═══════════════════════════════════════════════════\n\n");
+
         }
     }
 
-    public static void e( Object msg) {
-        if (mDebuggable >= LEVEL_ERROR && ADB) {
-            StackTraceElement element = getTargetStackTraceElement();
-            if( element != null ) Log.e(mTag, element.toString() );
-            String tt = ObjectsToString( msg );
-            if( tt.length() > 4000 ) {
-                for(int i = 0;i < tt.length();i += 4000){
-                    if( i + 4000 < tt.length()) {
-                        if( element != null ) Log.e(mTag, element.toString() );
-                        Log.e(mTag, "\n" + tt.substring(i, i + 4000));
-                    } else {
-                        if( element != null ) Log.e(mTag, element.toString() );
-                        Log.e(mTag, "\n" + tt.substring(i, tt.length()));
-                    }
-                }
-            } else {
-                Log.e(mTag, ObjectsToString( msg) );
-            }
-        }
+    public static void e(Object msg) {
+        e(mTag,msg);
     }
 
     public static void e(String tag, Object... msg) {
         if (mDebuggable >= LEVEL_ERROR && ADB) {
+
+            Log.e(mTag,"\n╔═════════════════════════════ start ══════════════════════════════════════════════════");
+
             StackTraceElement element = getTargetStackTraceElement();
-            if( element != null ) Log.e(mTag, element.toString() );
+            if( element != null ) Log.e(tag, element.toString() );
             String tt = ObjectsToString( msg );
             if( tt.length() > 400 ) {
                 for(int i = 0;i < tt.length();i += 400){
@@ -127,10 +115,12 @@ public class LogUtils {
             } else {
                 Log.e(tag, ObjectsToString( msg) );
             }
+
+            Log.e(tag,"\n╚═════════════════════════════ end ═══════════════════════════════════════════════════\n\n");
         }
     }
 
-    public static void printArray( Object... param ) {
+    public static void printArray(Object... param) {
         if ( ADB ) {
             StringBuilder builder = new StringBuilder();
             if (param != null && param.length > 0) {

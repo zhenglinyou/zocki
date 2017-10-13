@@ -99,7 +99,7 @@ public class TableCreateManager {
     }
 
     private static String[] getTableColumnRetain(String[] tableColumn_New,String[] tableColumn_Old) {
-        Set<String> retainColumnSet = new HashSet<String>();
+        Set<String> retainColumnSet = new HashSet<>();
         retainColumnSet.addAll(Arrays.asList(tableColumn_New));
         retainColumnSet.retainAll(Arrays.asList(tableColumn_Old));
         return retainColumnSet.toArray(new String[]{});
