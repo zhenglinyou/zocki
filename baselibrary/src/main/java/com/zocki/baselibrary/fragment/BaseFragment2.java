@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.zocki.baselibrary.logger.LogUtils;
+
 public abstract class BaseFragment2 extends Fragment{
 
     private static final String TAG = BaseFragment.class.getSimpleName();
@@ -31,6 +33,9 @@ public abstract class BaseFragment2 extends Fragment{
             onFragmentFirstVisible();
             isFirstVisible = false;
         }
+
+        LogUtils.e( isVisibleToUser );
+
         if (isVisibleToUser) {
             onFragmentVisibleChange(true);
             isFragmentVisible = true;

@@ -28,7 +28,7 @@ public abstract class HttpCallBack<T extends BaseEntity> implements IHttpCallBac
         onPreExcute();
 
         if(cache) {
-            LogUtils.e( "key = " + url );
+            // LogUtils.e( "key = " + url );
             // 可以去线程调度
             IDBDao<CacheData> daoSupport = DBDaoFactory.getInstance().getDao(CacheData.class);
             List<CacheData> cacheDatas = daoSupport.query()
@@ -60,7 +60,7 @@ public abstract class HttpCallBack<T extends BaseEntity> implements IHttpCallBac
             }
         }
 
-        if( AppConfig.ADB ) LogUtils.e( "新数据 ==> " + result );
+        // if( AppConfig.ADB ) LogUtils.e( "新数据 ==> " + result );
 
         handlerJsonResponse(cache, isNewData, url, result );
     }

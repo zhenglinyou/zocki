@@ -1,8 +1,8 @@
 package com.zocki.baselibrary.fragment;
 
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +10,10 @@ import android.view.ViewStub;
 import android.widget.FrameLayout;
 
 import com.zocki.baselibrary.R;
-import com.zocki.baselibrary.ioc.ViewUtils;
 import com.zocki.baselibrary.logger.LogUtils;
 import com.zocki.baselibrary.viewheper.FindViewById;
 
-/**
- * Created by kaisheng3 on 2017/8/16.
- */
-public abstract class BaseFragment extends Fragment {
-
-    private boolean isVisible = false; //当前Fragment是否可见
-    private boolean isInitView = false; //是否与View建立起映射关系
-    private boolean isFirstLoad = true; //是否是第一次加载数据
-    private boolean isRequestData = false;
+public abstract class SimpleTempFragment extends BaseFragment2 {
 
     public View rootView;
 
@@ -30,26 +21,17 @@ public abstract class BaseFragment extends Fragment {
 
     private ViewStub mContentViewStub, mLoadingViewStub;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        if( rootView != null && !isRequestData ) return rootView;
+        if( rootView != null ) return rootView;
         rootView = inflater.inflate(R.layout.base_fragment_layout,null);
 
         mFindViewById = new FindViewById(rootView);
 
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if( parent != null ) parent.removeView( rootView );
-
-        isInitView = true;
-
-        //LogUtils.e( getClass().getSimpleName() + " --- " + "createView" );
 
         return rootView;
     }
@@ -64,47 +46,34 @@ public abstract class BaseFragment extends Fragment {
         initLoadingView();
 
         initView();
-
-        // ViewUtils.inject(rootView);
-
-        lazyLoadData();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    protected void onFragmentVisibleChange(boolean isVisible) {
+
+        LogUtils.e( isVisible );
+
+        if (isVisible) {
+            // 更新界面数据，如果数据还在下载中，就显示加载框
+        } else {
+            // 关闭加载框
+        }
     }
+
+    @Override
+    protected void onFragmentFirstVisible() {
+        // 去服务器下载数据
+        LogUtils.e(" 加载数据 ");
+    }
+
 
     public final <E extends View> E getView(int viewId) {
         return mFindViewById.getView(viewId);
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        LogUtils.e( isVisibleToUser );
-        if ( isVisibleToUser ) {
-            isVisible = true;
-            lazyLoadData();
-        } else {
-            isVisible = false;
-        }
-        super.setUserVisibleHint(isVisibleToUser);
-    }
-
-    private void lazyLoadData() {
-        if (!isFirstLoad || !isVisible || !isInitView) {
-            if( isRequestData ) initData();
-            return;
-        }
-
-        initData();
-
-        isFirstLoad = false;
-    }
-
     private void initContentView(){
 
-        mContentViewStub = getView(R.id.view_stub_content);
+        mContentViewStub = mFindViewById.getView(R.id.view_stub_content);
 
         int resLayoutId = getContentResId();
         if( resLayoutId <= 0 ) {
@@ -116,7 +85,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     private void initTitle() {
-        FrameLayout mFramelayout = getView(R.id.framelayout_title);
+        FrameLayout mFramelayout = mFindViewById.getView(R.id.framelayout_title);
         View titleView = getTitleView();
         if( titleView != null ) {
             mFramelayout.setVisibility(View.VISIBLE);
@@ -125,7 +94,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     private void initLoadingView() {
-        mLoadingViewStub = getView(R.id.view_stub_loading);
+        mLoadingViewStub = mFindViewById.getView(R.id.view_stub_loading);
 
         int resId = getLoadingResId();
         if( resId != 0 ) {
@@ -145,10 +114,6 @@ public abstract class BaseFragment extends Fragment {
         mLoadingViewStub.setVisibility(View.GONE);
     }
 
-
-    public final void setRequestData(boolean isRequestData ) {
-        this.isRequestData = isRequestData;
-    }
 
     // 初始化头部
     protected View getTitleView() {

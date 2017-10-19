@@ -20,7 +20,7 @@ public class Button3Fragment extends BaseFragment {
 
     @Override
     public void initView() {
-        LogUtils.e( "333333333333333333333333" );
+        // LogUtils.e( "333333333333333333333333" );
     }
 
     @Override

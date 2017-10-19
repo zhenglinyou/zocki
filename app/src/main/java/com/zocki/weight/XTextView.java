@@ -57,7 +57,6 @@ public class XTextView extends View {
 
         Paint.FontMetricsInt fontMetricsInt = mPaint.getFontMetricsInt();
         int dy = ( fontMetricsInt.bottom - fontMetricsInt.top ) / 2 - fontMetricsInt.bottom;
-        LogUtils.e( fontMetricsInt.bottom + " " + fontMetricsInt.top );
         int baseLine = getHeight() / 2 + dy;
         canvas.drawText( text, 0, baseLine, mPaint );
     }

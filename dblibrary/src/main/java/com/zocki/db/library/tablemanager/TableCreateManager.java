@@ -109,7 +109,7 @@ public class TableCreateManager {
 
     public static void createTable(SQLiteDatabase db,Class mClazz) {
         String createTabelSql = getCreateTabelSql(mClazz);
-        LogUtils.e(createTabelSql);
+        // LogUtils.e(createTabelSql);
         db.execSQL(createTabelSql);
     }
 

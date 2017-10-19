@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:name=".ZockiApplication"
-        android:theme="@style/AppTheme">
+        android:theme="@style/App_Launcher_Theme">
 
         <activity android:name=".MainActivity">
             <intent-filter>

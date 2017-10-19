@@ -39,7 +39,7 @@ public class OkHttpEngine implements IHttpConnector {
 
         final String mKeyUrl = HttpUtils.joinParams(url,params);
 
-        if( AppConfig.ADB ) LogUtils.e( "get 请求链接 : " + mKeyUrl);
+        // if( AppConfig.ADB ) LogUtils.e( "get 请求链接 : " + mKeyUrl);
 
         httpCallBack.onPreExcute(cache, mKeyUrl, context, params);
 

@@ -4,9 +4,6 @@ import com.zocki.R;
 import com.zocki.baselibrary.fragment.BaseFragment;
 import com.zocki.baselibrary.logger.LogUtils;
 
-/**
- * Created by kaisheng3 on 2017/8/18.
- */
 public class Button4Fragment extends BaseFragment {
 
     @Override
@@ -21,6 +18,6 @@ public class Button4Fragment extends BaseFragment {
 
     @Override
     public void initData() {
-
+        LogUtils.e( "kkkkkkkkkkkkkkkkk" );
     }
 }

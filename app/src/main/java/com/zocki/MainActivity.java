@@ -2,20 +2,18 @@ package com.zocki;
 
 import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.Interpolator;
 
-import com.bm.library.PhotoView;
+
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
-import com.zocki.baselibrary.fragment.BaseFragment;
 import com.zocki.baselibrary.http.HttpUtils;
 import com.zocki.baselibrary.ioc.ViewId;
-import com.zocki.baselibrary.logger.LogUtils;
-import com.zocki.baselibrary.utils.Preconditions;
 import com.zocki.entity.RecoverEntity;
 import com.zocki.fragment.Button1Fragment;
 import com.zocki.fragment.Button2Fragment;
@@ -25,18 +23,22 @@ import com.zocki.framelibrary.BaseSkinActivity;
 import com.zocki.framelibrary.http.HttpCallBack;
 import com.zocki.mainbutton.MainButton;
 
-import static android.R.attr.factor;
-import static android.R.attr.x;
-
 public class MainActivity extends BaseSkinActivity{
 
     @ViewId(R.id.main_button)
     private MainButton mMainButton;
 
-    private BaseFragment button1Fragment = new Button1Fragment();
-    private BaseFragment button2Fragment = new Button2Fragment();
-    private BaseFragment button3Fragment = new Button3Fragment();
-    private BaseFragment button4Fragment = new Button4Fragment();
+    private Fragment button1Fragment = new Button1Fragment();
+    private Fragment button2Fragment = new Button2Fragment();
+    private Fragment button3Fragment = new Button3Fragment();
+    private Fragment button4Fragment = new Button4Fragment();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        // android_manifest 中主题不同
+        // setTheme(R.style.App_Page_Theme);
+        super.onCreate(savedInstanceState, persistentState);
+    }
 
     @Override
     protected int getContentResId() {
@@ -48,7 +50,7 @@ public class MainActivity extends BaseSkinActivity{
 
         QMUIStatusBarHelper.translucent(this, Color.parseColor("#00ff00"));
 
-       /* mMainViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+        /*mMainViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 switch (position) {
@@ -59,7 +61,6 @@ public class MainActivity extends BaseSkinActivity{
                 }
                 return null;
             }
-
             @Override
             public int getCount() {
                 return 4;
@@ -84,10 +85,12 @@ public class MainActivity extends BaseSkinActivity{
 
         changeFragment(button1Fragment);
 
-        /*getSupportFragmentManager().beginTransaction().add(R.id.framelayout_content,button1Fragment)
+        /*
+        getSupportFragmentManager().beginTransaction().add(R.id.framelayout_content,button1Fragment)
                 .add(R.id.framelayout_content,button2Fragment)
                 .add(R.id.framelayout_content,button3Fragment)
-                .add(R.id.framelayout_content,button4Fragment).commit();*/
+                .add(R.id.framelayout_content,button4Fragment).commit();
+        */
     }
 
     private void changeFragment(Fragment fragment) {
@@ -124,7 +127,6 @@ public class MainActivity extends BaseSkinActivity{
                 .execute(new HttpCallBack<RecoverEntity>() {
                     @Override
                     public void onSuccess(RecoverEntity result) {
-                        LogUtils.e( result.isNewData + " -- " + result );
                     }
                     @Override
                     public void onError(Exception e) {
